@@ -199,14 +199,6 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
-        var latest_version = latest_releases.runtime.version.trim();
-
-        // check that latest version matches x.x.x.x before updating
-        var re = /^\d+\.\d\.\d\.\d+/;
-        if (re.test(latest_version)) {
-            $('.latest_version').html(latest_version);
-        }
-
         // get the newest release version
         // used to only add builds from the last two years to the runtime release table
         versArr = JSON.parse(JSON.stringify(builds));
@@ -317,7 +309,7 @@ function render_builds(builds, parent) {
                         var verification_column2 = $(
                             '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
-                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );     
 
@@ -902,10 +894,11 @@ function validate_java_eeAndmp_levels() {
         .text();
  
         if (javaVersion === '8') {
-         var javaOptions = $(
-             '.starter_field[data-starter-field=\'j\'] select option'
-         );
-         $(javaOptions[1]).prop('selected', true);
+            
+         var javaOptions = $('.starter_field[data-starter-field=\'j\'] select option').filter(function(){
+            return this.text == "11"
+           });
+         $(javaOptions).prop('selected', true);
          var message = $(
          '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
          );
@@ -1098,7 +1091,10 @@ function validate_starter_inputs(event) {
     }
 }
 
-function displayMessage(message,javaMsg = false) {
+function displayMessage(message,javaMsg) {
+    if(!javaMsg){
+        javaMsg = false;
+    }
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
@@ -1110,7 +1106,7 @@ function displayMessage(message,javaMsg = false) {
         classNameIs = 'ind_starter_warning';
     }
     close_icon.on('click', function () {
-        $('.' + classNameIs).empty();
+        $('#starter_warnings').empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
@@ -1118,11 +1114,11 @@ function displayMessage(message,javaMsg = false) {
         }
     });
    
-    $('#starter_warnings').append("<div class='" + classNameIs +"'>");
- 
+    $('#starter_warnings').append("<li class='" + classNameIs +"'>");
+
     $('.' + classNameIs)
-    .append(message)
-    .append(close_icon);  
+    .append(message);
+    $('#starter_warnings').append(close_icon);   
 } 
 
 

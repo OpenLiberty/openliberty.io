@@ -73,6 +73,32 @@ for tag in tags:
         beta_posts.sort(reverse = True)
         after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
         tag["beta_post_links"] = after_format_beta_links
+    if tag_featured != None:
+        featured_tags.append(tag_name)
+with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_file:
+    # featured_str = ", ".join(featured_str_list)
+    data = BeautifulSoup(blog_html_file, 'lxml')
+    data.p.unwrap()
+    data.body.unwrap()
+    data.html.unwrap()
+    featured_tags_element = data.find("div", id="featured_tags_list")
+    featured_tags_element.clear()
+    for t in featured_tags:
+        name = t.replace(" ", "-")
+        ft_link = data.new_tag("p")
+        comma = data.new_tag("span")
+        comma.string = ","
+        ft_link["tabindex"] = "0"
+        ft_link["role"] = "button"
+        ft_link["class"] = "featured_tag"
+        ft_link["data-tag-id"] = name
+        ft_link.string = "{% t blog.tags."+name+" %}"
+        featured_tags_element.append(ft_link)
+        ft_link.insert_after(comma)
+    blog_html_file.seek(0)
+    blog_html_file.truncate()
+    blog_html_file.write(str(data.prettify()).replace("&gt;", ">").replace("&lt;", "<"))
+    blog_html_file.close()
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
 f.close()

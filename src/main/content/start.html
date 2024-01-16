@@ -44,7 +44,7 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 <div id="starter_section" class="container">
     <div class="row">
         <div class="col">
-            <h2 class="section_title">{% t start.starter_app_heading %}</h2> 
+            <h2 id="_create_a_starter_application" class="section_title"><a class="anchor" href="#_create_a_starter_application"></a>{% t start.starter_app_heading %}</h2> 
         </div>               
     </div>   
     <div class="row">
@@ -99,8 +99,8 @@ seo-description: Use Maven or Gradle to create a starter application for develop
     </div>
     <div class="row">
         <div class="col">
-            <div id="starter_warnings"></div>
-            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0" data-toggle="modal">{% t start.generate_project %}</a>
+            <ul id="starter_warnings"></ul>
+            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0" data-toggle="modal" role="button">{% t start.generate_project %}</a>
         </div>        
     </div>
 </div>
@@ -135,8 +135,8 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 
 <!-- MAVEN, GRADLE, DOCKER -->
 <div id="get_section" class="container">
-    <h2 id="getOL" class="section_title">{% t start.get_OL_section_title %}</h2>
-    <p>{% t start.get_OL_section_text %}</p>
+    <h2 id="getOL" class="section_title"><a class="anchor" href="#getOL"></a>{% t start.add_to_existing_app.title %}</h2>
+    <p>{% t start.add_to_existing_app.sect_heading %}</p>
     <div class="row tabs_container">
         <!-- TABS -->
         <div class="col">
@@ -162,10 +162,14 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                     <div class="code_block_wrapper" title="Code block">
                         <div class="copied_confirmation">Copied to clipboard</div>
                         <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
-                        <pre class="code_container">&lt;dependency&gt;<br>    &lt;groupId&gt;io.openliberty&lt;/groupId&gt;<br>    &lt;artifactId&gt;openliberty-runtime&lt;/artifactId&gt;<br>    &lt;version&gt;[<span class="latest_version">19.0.0.9</span>,)&lt;/version&gt;<br>    &lt;type&gt;zip&lt;/type&gt;<br>&lt;/dependency&gt;</pre>
+                        <pre class="code_container">&lt;plugin&gt;<br>    &lt;groupId&gt;io.openliberty.tools&lt;/groupId&gt;<br>    &lt;artifactId&gt;liberty-maven-plugin&lt;/artifactId&gt;<br>    &lt;version&gt;<span class="latest_version">3.10</span>&lt;/version&gt;<br>&lt;/plugin&gt;</pre>
                     </div>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/maven-intro.html" class="blue_link_light_background_external">{% t start.how_to_use_maven %}</a>
+                    <p>
+                        {% t start.add_to_existing_app.maven_guide_text %}
+                        <a href="{{baseURL}}/guides/maven-intro.html" class="blue_link_light_background_external">{% t start.add_to_existing_app.try_guide_link %}</a>
+                    </p>
+                    <p>{% t start.add_to_existing_app.maven_docs_text %}
+                        <a href="https://github.com/OpenLiberty/ci.maven/blob/main/README.md#plugins" class="orange_link_light_background">{% t start.add_to_existing_app.maven_docs_link %}</a>
                     </p>
                 </div>
                 <!-- GRADLE -->
@@ -173,24 +177,33 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                     <div class="code_block_wrapper" title="Code block">
                         <div class="copied_confirmation">Copied to clipboard</div>
                         <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
-                        <pre class="code_container">dependencies {<br>    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[<span class="latest_version">19.0.0.9</span>,)'<br>}</pre>
+                        <pre class="code_container">buildscript { <br>  repositories { <br>     mavenCentral()<br>  }<br>   dependencies {<br>    classpath 'io.openliberty.tools:liberty-gradle-plugin:'<span class="latest_version">3.8</span>'<br>   }<br>}</pre>
                     </div>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/gradle-intro.html" class="blue_link_light_background_external">{% t start.how_to_use_gradle %}</a>
+                    <p>The plugin also needs to be applied in the build file in order to be utilized.</p>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">apply plugin: 'liberty'</pre>
+                    </div>
+                    <p>{% t start.add_to_existing_app.gradle_guide_text %}
+                        <a href="{{baseURL}}/guides/gradle-intro.html" class="blue_link_light_background_external">{% t start.add_to_existing_app.try_guide_link %}</a>
+                    </p>
+                    <p>{% t start.add_to_existing_app.gradle_docs_text %}
+                        <a href="https://github.com/OpenLiberty/ci.gradle/blob/main/README.md#plugin-configuration" class="orange_link_light_background">{% t start.add_to_existing_app.gradle_docs_link %}</a>
                     </p>
                 </div>
                 <!-- DOCKER -->
                 <div id="docker" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-docker">
-                    <p>{% t start.container_section_text %}
-                        <a href="{{baseURL}}/docs/latest/container-images.html" class="blue_link_light_background_external">{% t start.container_section_link %}</a>
-                    </p>
                     <div class="code_block_wrapper" title="Code block">
                         <div class="copied_confirmation">Copied to clipboard</div>
                         <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
                         <pre class="code_container">FROM icr.io/appcafe/open-liberty</pre>
                     </div>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/containerize.html" class="blue_link_light_background_external">{% t start.how_to_use_docker %}</a>
+                    <p>{% t start.add_to_existing_app.docker_guide_text %}
+                        <a href="{{baseURL}}/guides/containerize.html" class="blue_link_light_background_external">{% t start.add_to_existing_app.try_guide_link %}</a>
+                    </p>
+                    <p>{% t start.add_to_existing_app.docker_docs_text %}
+                        <a href="{{baseURL}}/docs/latest/container-images.html" class="blue_link_light_background_external">{% t start.add_to_existing_app.docker_docs_link %}</a>
                     </p>
                 </div>
             </div>
@@ -200,7 +213,7 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 
 <!-- IDE TOOLS -->
 <div id="ide_tools_section" class="container">
-    <h2 class="section_title">{% t start.ide_tools.section_title %}</h2>
+    <h2 id="_develop_with_liberty_tools" class="section_title"><a class="anchor" href="#_develop_with_liberty_tools"></a>{% t start.ide_tools.section_title %}</h2>
     <p class="ide_tools_text1">
         {% t start.ide_tools.section_text1 %}
     </p>
@@ -212,15 +225,15 @@ seo-description: Use Maven or Gradle to create a starter application for develop
         <div class="column">
             <a id="liberty_tools_for_eclipse_link" href="https://marketplace.eclipse.org/content/liberty-tools">
                 {% t start.ide_tools.eclipse_link %}
-                <img src="/img/launch_white.svg" class="launch_icon" >
+                <img src="/img/launch_white.svg" class="launch_icon" aria-label="Eclipse IDE" >
             </a>
             <a id="liberty_tools_for_intellij_link" href="https://plugins.jetbrains.com/plugin/14856-liberty-tools">
                 {% t start.ide_tools.intellij_link %} 
-                <img src="/img/launch_white.svg" class="launch_icon" >
+                <img src="/img/launch_white.svg" class="launch_icon" aria-label="IntelliJ IDEA" >
             </a>
             <a id="liberty_tools_for_vs_code_link" href="https://marketplace.visualstudio.com/items?itemName=Open-Liberty.liberty-dev-vscode-ext">
                 {% t start.ide_tools.vscode_link %}
-                <img src="/img/launch_white.svg" class="launch_icon" >
+                <img src="/img/launch_white.svg" class="launch_icon" aria-label="Visual Studio Code" >
             </a>
         </div>
     </div>
@@ -236,7 +249,7 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 
 <!-- DOWNLOADS TABLE TABS -->
 <div class="container">
-    <h2 id="downloads-pkg" class="section_title">{% t start.download_package %}</h2>
+    <h2 id="downloads-pkg" class="section_title"><a class="anchor" href="#downloads-pkg"></a>{% t start.download_package %}</h2>
     <p>{% t start.download_package_section.para %}</p>
     <div class="row tabs_container">
         <ul class="nav nav-tabs" role="tablist" aria-labelledby="downloads-pkg">
