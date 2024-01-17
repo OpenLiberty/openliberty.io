@@ -35,17 +35,17 @@ var navigation = (function(){
     }
 
     if((window.location.pathname).includes("/ja/")){
-      $(".doc_select.language_select .context .version").text("JA");
+      $(".doc_select.language_select .context .version").text("日本語");
       $('.doc_select.language_select .components .version.is-current').removeClass("is-current");
-      $('.doc_select.language_select .components .version a:contains("JA")').parent().addClass("is-current");
+      $('.doc_select.language_select .components .version a:contains("日本語")').parent().addClass("is-current");
     } else if ((window.location.pathname).includes("/zh-Hans/")){
-      $(".doc_select.language_select .context .version").text("ZH-HANS");
+      $(".doc_select.language_select .context .version").text("中文（简体)");
       $('.doc_select.language_select .components .version.is-current').removeClass("is-current");
-      $('.doc_select.language_select .components .version a:contains("ZH-HANS")').parent().addClass("is-current");
+      $('.doc_select.language_select .components .version a:contains("中文（简体)")').parent().addClass("is-current");
     } else {
-      $(".doc_select.language_select .context .version").text("EN");
+      $(".doc_select.language_select .context .version").text("English");
       $('.doc_select.language_select .components .version.is-current').removeClass("is-current");
-      $('.doc_select.language_select .components .version a:contains("EN")').parent().addClass("is-current");
+      $('.doc_select.language_select .components .version a:contains("English")').parent().addClass("is-current");
     }
 
     $($menuPanel).on("click", ".nav-item-toggle", function (){
