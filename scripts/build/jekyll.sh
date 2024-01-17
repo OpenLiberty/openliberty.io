@@ -105,3 +105,4 @@ mkdir -p target/jekyll-webapp/zh-Hans/
 mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
 mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
 mv zh-Hans/assets target/jekyll-webapp/zh-Hans/
+mv zh-Hans/docs target/jekyll-webapp/zh-Hans/

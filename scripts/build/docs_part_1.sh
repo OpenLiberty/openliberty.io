@@ -36,7 +36,25 @@ pushd target/jekyll-webapp/ja/docs
 for d in ../../../../src/main/content/docs/build/site/docs/* ; do
     DIR_N="$(basename "$d")"
     mkdir -p $DIR_N
-    cp -r ../../../../ja-docs-html/. $DIR_N
+    if [ -d ../../../../ja-docs-html/$DIR_N/. ]; then
+        cp -r ../../../../ja-docs-html/$DIR_N/. $DIR_N
+    else
+        cp -r ../../../../ja-docs-html/latest/. $DIR_N
+    fi
+done
+
+popd
+
+pushd target/jekyll-webapp/zh-Hans/docs
+
+for d in ../../../../src/main/content/docs/build/site/docs/* ; do
+    DIR_N="$(basename "$d")"
+    mkdir -p $DIR_N
+    if [ -d ../../../../zh-Hans-docs-html/$DIR_N/. ]; then
+        cp -r ../../../../zh-Hans-docs-html/$DIR_N/. $DIR_N
+    else
+         cp -r ../../../../zh-Hans-docs-html/latest/. $DIR_N
+    fi
 done
 
 popd
@@ -47,6 +65,7 @@ timer_start=$(date +%s)
 mkdir -p target/jekyll-webapp/docs/
 cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 cp -r src/main/content/docs/build/site/_ target/jekyll-webapp/ja
+cp -r src/main/content/docs/build/site/_ target/jekyll-webapp/zh-Hans
 # rm -rf src/main/content/docs/build
 timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
