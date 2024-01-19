@@ -83,9 +83,8 @@ var openliberty = (function() {
         $('body').css("margin-top", nav_height + "px");
 
         // To set the toc column to the top when mobile toc accordion returns to original position
-        var mobile = document.getElementById('mobile_toc_accordion_container');
+        var mobile = $('#mobile_toc_accordion_container');
         if(!mobile.classList.contains("fixed_toc_accordion")){
-            console.log("class found");
             $("#toc_column").css("top", nav_height+"px");
         }
 
@@ -126,7 +125,7 @@ var openliberty = (function() {
         $("#tablet_toc_accordion_container").css("top", "0px");
 
         // to set toc column below the mobile toc accordion only when nav bar is hidden
-        var mobile = document.getElementById('mobile_toc_accordion_container');
+        var mobile = $('#mobile_toc_accordion_container');
         if(mobile.classList.contains("fixed_toc_accordion")){
             console.log("class found");
             $("#toc_column").css("top", accord_height+"px");
