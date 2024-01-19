@@ -127,7 +127,6 @@ var openliberty = (function() {
         // to set toc column below the mobile toc accordion only when nav bar is hidden
         var mobile = $('#mobile_toc_accordion_container');
         if(mobile.classList.contains("fixed_toc_accordion")){
-            console.log("class found");
             $("#toc_column").css("top", accord_height+"px");
         }
 
