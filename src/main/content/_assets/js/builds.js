@@ -272,10 +272,7 @@ function render_builds(builds, parent) {
                             tableID +
                             '_version" rowspan="' +
                             num_packages +
-                            '">' + '<a href="#' +
-                            version_id +
-                            '">' +
-                            "</a>" +
+                            '">' + 
                             build.version +
                             (releaseBuild.releasePostLink ? '<a class="version_sublink" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
                             (releaseBuild.tests_log ? 
