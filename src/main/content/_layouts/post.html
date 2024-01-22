@@ -47,7 +47,11 @@ js: post
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
+                    {% if page.author_github %}
+                        <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
+                    {% else %}
+                        <a class="author_name" target="_blank" rel="noopener">{{ page.author }}</a>
+                    {% endif %}
                     {% for author in page.additional_authors %}
                         {% if additional_author_count == 1 %}
                             <span>{% t global.and %}</span>
