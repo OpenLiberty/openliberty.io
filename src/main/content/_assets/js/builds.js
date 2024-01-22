@@ -127,16 +127,24 @@ function getPublicKeyURL(liberty_version) {
     var liberty_versions_using_2021_pem = ["22.0.0.1", "22.0.0.2", "22.0.0.3", "22.0.0.4", "22.0.0.5", "22.0.0.6", 
     "22.0.0.7", "22.0.0.8", "22.0.0.9", "22.0.0.10", "22.0.0.11", "22.0.0.12", "22.0.0.13", "23.0.0.1"];
 
+    var liberty_versions_using_2023_pem = ["23.0.0.2", "23.0.0.3", "23.0.0.4", "23.0.0.5", "23.0.0.6", 
+    "23.0.0.7", "23.0.0.8", "23.0.0.9", "23.0.0.10", "23.0.0.11", "23.0.0.12"];
+
     var pem_2021_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
     
     var pem_2023_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem";
 
+    var pem_2024_href =
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem.cer";
+    
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
         return pem_2021_href;
-    } else {
+    } else if(liberty_versions_using_2023_pem.indexOf(liberty_version) > -1) {
         return pem_2023_href;
+    } else {
+        return pem_2024_href;
     }
 }
 
@@ -217,6 +225,7 @@ function render_builds(builds, parent) {
         }
     });
 
+    let flag=0;
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
@@ -253,13 +262,16 @@ function render_builds(builds, parent) {
                             parent.append('<tr></tr>');
                         }
                     }                    
-                    
+                    var version_id = flag == 0 ? "latest" : build.version.replace(/\./g, "-");
+                    flag = 1;
                     var version_column = $(
-                        '<td headers="' +
+                        '<td id="' + 
+                            version_id + 
+                            '" headers="' +
                             tableID +
                             '_version" rowspan="' +
                             num_packages +
-                            '">' +
+                            '">' + 
                             build.version +
                             (releaseBuild.releasePostLink ? '<a class="version_sublink" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
                             (releaseBuild.tests_log ? 
@@ -858,7 +870,7 @@ function add_invalid_message(field_id, valid) {
 function validate_group_name() {
     // Each group name package can contain letters (either lower or uppercase),   
     // numbers and underscores all separated by periods Eg: com.Acme.my_widget.v2
-    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]*)+$/g;
+    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/g;
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
     add_invalid_message('g', valid);
