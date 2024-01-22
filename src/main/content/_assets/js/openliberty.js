@@ -70,23 +70,17 @@ var openliberty = (function() {
     // slide nav bar into view, move down elements that are fixed to top of screen
     function showNav() {
         var nav_height = $("#nav_bar").outerHeight();
-        var accord_height = $("#mobile_toc_accordion").outerHeight();
+
         // fix nav bar to top of screen
         $("#nav_bar").addClass("fixed_top");
         $("#nav_bar").removeClass("hide_nav");
 
         // push toc column, toc indicator and code column down below nav bar
-        $("#toc_column").css("top",accord_height + nav_height + "px");
+        $("#toc_column").css("top", nav_height + "px");
         $("#toc_indicator").css("margin-top", nav_height + "px");
 
         // add margin-top to body so page doesn't jump when nav slides into view
         $('body').css("margin-top", nav_height + "px");
-
-        // To set the toc column to the top when mobile toc accordion returns to original position
-        var mobile = $('#mobile_toc_accordion_container');
-        if(!mobile.classList.contains("fixed_toc_accordion")){
-            $("#toc_column").css("top", nav_height+"px");
-        }
 
         // on /guides, if tablet toc accordion is fixed to top of screen, move toc accordion below fixed nav bar
         if ($("#tablet_toc_accordion_container").css("position") === "fixed") {
@@ -109,7 +103,6 @@ var openliberty = (function() {
 
     // slide nav bar back out of view, reset elements that were pushed down
     function hideNav() {
-        var accord_height = $("#mobile_toc_accordion").outerHeight();
     // reset nav bar and move off screen
         $("#nav_bar").removeClass("fixed_top");
         $("#nav_bar").addClass("hide_nav");
@@ -123,12 +116,6 @@ var openliberty = (function() {
 
         // fix mobile and tablet toc accordion to top of screen again
         $("#tablet_toc_accordion_container").css("top", "0px");
-
-        // to set toc column below the mobile toc accordion only when nav bar is hidden
-        var mobile = $('#mobile_toc_accordion_container');
-        if(mobile.classList.contains("fixed_toc_accordion")){
-            $("#toc_column").css("top", accord_height+"px");
-        }
 
         // adjust docs toolbar and nav position
         $(".toolbar").css("top", "0px");
