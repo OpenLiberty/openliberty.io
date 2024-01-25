@@ -141,10 +141,8 @@ function getPublicKeyURL(liberty_version) {
     
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
         return pem_2021_href;
-    } else if(liberty_versions_using_2023_pem.indexOf(liberty_version) > -1) {
-        return pem_2023_href;
     } else {
-        return pem_2024_href;
+        return pem_2023_href;
     }
 }
 
@@ -870,7 +868,7 @@ function add_invalid_message(field_id, valid) {
 function validate_group_name() {
     // Each group name package can contain letters (either lower or uppercase),   
     // numbers and underscores all separated by periods Eg: com.Acme.my_widget.v2
-    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*$/g;
+    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]*)+$/g;
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
     add_invalid_message('g', valid);
