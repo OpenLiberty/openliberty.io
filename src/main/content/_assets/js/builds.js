@@ -318,7 +318,7 @@ function render_builds(builds, parent) {
                         var verification_column2 = $(
                             '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
-                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' : '' ) +
+                            (sig_href ? (pem_href.endsWith('.cer')?'<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'CER</a>' :'<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' ): '' ) +
                             '</td>'
                         );     
 
