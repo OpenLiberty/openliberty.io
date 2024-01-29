@@ -21,7 +21,7 @@
                         {{#if missing }}
                           <a href="{{getlang ./url}}/docs/{{./version}}/noversion.html?ref={{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
                         {{else}}
-                          <a href="{{getlang ./url}}{{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                          <a href="{{{ relativize ./url }}}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
                         {{/if}}
                     {{/if}}
                   {{/each}}
