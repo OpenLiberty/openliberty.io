@@ -142,8 +142,10 @@ function getPublicKeyURL(liberty_version) {
 
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
         return pem_2021_href;
-    } else {
+    } else if(liberty_versions_using_2023_pem.indexOf(liberty_version) > -1) {
         return pem_2023_href;
+    } else {
+        return pem_2024_href;
     }
 }
 
