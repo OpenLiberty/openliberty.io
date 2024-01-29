@@ -216,7 +216,8 @@ function render_builds(builds, parent) {
             }
         }
     });
-
+    
+    let flag=0;
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
@@ -252,14 +253,18 @@ function render_builds(builds, parent) {
                         for (var i = 0; i < max - num_packages; i++) {
                             parent.append('<tr></tr>');
                         }
-                    }                    
-                    
+                    }  
+                  
+                    var version_id = flag == 0 ? "latest" : build.version.replace(/\./g, "-");
+                    flag = 1;
                     var version_column = $(
-                        '<td headers="' +
+                        '<td id="' + 
+                            version_id + 
+                            '" headers="' +
                             tableID +
                             '_version" rowspan="' +
                             num_packages +
-                            '">' +
+                            '">' + 
                             build.version +
                             (releaseBuild.releasePostLink ? '<a class="version_sublink" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
                             (releaseBuild.tests_log ? 
@@ -1579,3 +1584,12 @@ $(window).on('load', function () {
         }
     });
 });
+
+$(window).on('load', function (e) {   
+    if(window.location.hash) {
+      var target = $(window.location.hash);
+      if(target.length) {
+        $('html, body').scrollTop(target.offset().top);
+      }
+    }
+})   
