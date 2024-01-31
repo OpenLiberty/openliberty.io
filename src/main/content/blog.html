@@ -103,7 +103,7 @@ i18n-seo-description: seo.blogs
    </div>
    <div class="col-md-12 col-lg-8 offset-lg-4" id="right_column">
     <div id="filter">
-     <img alt="Remove tag filter" role="button" id="x_button" onclick="blog.removeFilter(true);" onkeypress="blog.removeFilter(true);" src="/img/blog_x_button.svg" tabindex="0"/>
+     <img alt="Remove tag filter" id="x_button" onclick="blog.removeFilter(true);" onkeypress="blog.removeFilter(true);" role="button" src="/img/blog_x_button.svg" tabindex="0"/>
      <span id="no_results_message">
       {% t blog.no_results_found %} {% t blog.see %}
       <a class="orange_link_light_background" href="{{baseURL}}/blog/">
@@ -205,22 +205,28 @@ i18n-seo-description: seo.blogs
        <div class="row">
         <div class="blog_post_author_data_container">
          <div class="author_images_container">
-            {% if post.author_picture %}  
-            <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
-            {% else %}
-            <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
-            {% endif %}
+          {% if post.author_picture %}
+          <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
+          {% else %}
+          <img alt="Open Liberty logo" class="blog_post_author_image" src="https://avatars3.githubusercontent.com/u/28316667"/>
+          {% endif %}
             {% for author in post.additional_authors %}
                 {% if author.image %}
-                    <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
-                {% else %}
-                    <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
-                {% endif %}    
+          <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
+          {% else %}
+          <img alt="Open Liberty logo" class="blog_post_author_image" src="https://avatars3.githubusercontent.com/u/28316667"/>
+          {% endif %}    
             {% endfor %}
          </div>
+         {% if post.author_github %}
          <a class="blog_post_author_name" href="{{ post.author_github }}" rel="noopener" target="_blank">
           {{ post.author }}
          </a>
+         {% else %}
+         <span class="blog_post_author_name">
+          {{ post.author }}
+         </span>
+         {% endif %} 
          {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
          <span>
@@ -307,22 +313,28 @@ i18n-seo-description: seo.blogs
        <div class="row">
         <div class="blog_post_author_data_container">
          <div class="author_images_container">
-            {% if post.author_picture %}  
-                <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
-            {% else %}
-                <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
-            {% endif %}
+          {% if post.author_picture %}
+          <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
+          {% else %}
+          <img alt="Open Liberty logo" class="blog_post_author_image" src="https://avatars3.githubusercontent.com/u/28316667"/>
+          {% endif %}
             {% for author in post.additional_authors %}
                 {% if author.image %}
-                    <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
-                {% else %}
-                    <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
-                {% endif %}    
+          <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
+          {% else %}
+          <img alt="Open Liberty logo" class="blog_post_author_image" src="https://avatars3.githubusercontent.com/u/28316667"/>
+          {% endif %}    
             {% endfor %}
          </div>
+         {% if post.author_github %}
          <a class="blog_post_author_name" href="{{ post.author_github }}" rel="noopener" target="_blank">
           {{ post.author }}
          </a>
+         {% else %}
+         <span class="blog_post_author_name">
+          {{ post.author }}
+         </span>
+         {% endif %}
          {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
          <span>
