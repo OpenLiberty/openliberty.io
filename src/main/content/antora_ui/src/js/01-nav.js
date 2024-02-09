@@ -3,14 +3,24 @@ var navigation = (function(){
   var init = function(){
     var $navContainer = $('.nav-container');
     var $navToggle = $('.nav-toggle');
-
+    
     if ($navContainer.length <= 0) return;
-
+    
     $navToggle.on('click', showNav);
     $navContainer.on('click', handlePageClick);
-
+    
     var $menuPanel = $navContainer.find('[data-panel=menu]').eq(0);
     if ($menuPanel.length <= 0) return;
+    
+    var $referenceNav = $("span:contains(Reference)");
+    if($referenceNav.length <= 0) return;
+    var $addTo = $referenceNav.next();
+    var $start = $referenceNav.parent().next();
+    while($start.length > 0){
+      $temp = $start.next();
+      $start.appendTo($addTo);
+      $start = $temp;
+    }
 
     // Expand all first level doc categories
     $(".nav-menu > .nav-list > .nav-item").addClass('is-active');
