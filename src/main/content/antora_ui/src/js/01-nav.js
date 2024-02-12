@@ -17,7 +17,7 @@ var navigation = (function(){
     var $addTo = $referenceNav.next();
     var $start = $referenceNav.parent().next();
     while($start.length > 0){
-      $temp = $start.next();
+      var $temp = $start.next();
       $start.appendTo($addTo);
       $start = $temp;
     }
