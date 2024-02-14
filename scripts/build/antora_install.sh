@@ -6,10 +6,6 @@ timer_start=$(date +%s)
 echo "Install Antora"
 npm i -g @antora/cli@3.0.1
 
-# Install html-minifier globally
-echo "Install html-minifier"
-npm install html-minifier -g
-
 echo "Building the Antora"
 
 # add noindex metdata for non-prod/prod sites
@@ -19,6 +15,7 @@ pushd src/main/content/antora_ui
 echo "Installing Antora dependencies"
 npm install -g @antora/site-generator@3.0.1
 npm install gulp -g --ignore-scripts
+npm install html-minifier -g
 npm install node-sass@7.0.3 gulp-sass gulp-dart-sass --save-dev
 npm install
 gulp sass:convert
