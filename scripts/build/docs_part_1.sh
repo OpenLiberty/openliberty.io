@@ -24,7 +24,7 @@ echo "Begin building of Antora portion of docs"
 $BUILD_SCRIPTS_DIR/antora_install.sh
 
 if [ "$LOCAL_BUILD" = false ]; then
-ln -s "$(which html-minifier)" /usr/bin/node/html-minifier
+ln -s "$(which html-minifier)" /use/bin/node/html-minifier
 fi
 
 # Use the Antora playbook to download the docs and build the doc pages
