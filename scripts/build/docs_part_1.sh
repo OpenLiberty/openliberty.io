@@ -45,3 +45,12 @@ timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
 echo "Finished building and prepping all Antora content"
+
+timer_start=$(date +%s)
+python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py
+timer_end=$(date +%s)
+echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
+
+echo "Minifying Docs HTML"
+html-minifier --input-dir target/jekyll-webapp/docs --output-dir src/main/content/docs/build/site/. --file-ext html --collapse-whitespace --remove-comments
+echo "HTML minification complete"
