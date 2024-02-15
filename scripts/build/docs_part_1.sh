@@ -52,5 +52,5 @@ timer_end=$(date +%s)
 echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
 echo "Minifying Docs HTML"
-html-minifier --input-dir target/jekyll-webapp/docs --output-dir src/main/content/docs/build/site/. --file-ext html --collapse-whitespace --remove-comments
+html-minifier --input-dir target/jekyll-webapp/docs --output-dir target/jekyll-webapp/docs --file-ext html --collapse-whitespace --remove-comments
 echo "HTML minification complete"
