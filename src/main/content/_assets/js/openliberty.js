@@ -123,6 +123,7 @@ var openliberty = (function() {
         // fix mobile and tablet toc accordion to top of screen again
         $("#tablet_toc_accordion_container").css("top", "0px");
 
+
         // to set toc column below the mobile toc accordion only when nav bar is hidden
         if($('#mobile_toc_accordion_container').hasClass("fixed_toc_accordion")){
             $("#toc_column").css("top", accord_height+"px");
