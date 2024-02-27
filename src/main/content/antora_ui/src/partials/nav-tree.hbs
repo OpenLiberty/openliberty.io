@@ -11,7 +11,7 @@
       {{~#if (eq ./urlType 'internal')}}{{{relativize ./url}}}
       {{~else}}{{{./url}}}{{~/if}}">{{{./content}}}</a>
     {{else}}
-    <span class="nav-text" tabindex="0">{{{./content}}}</span>
+    <span class="nav-text" tabindex="0" role="button">{{{./content}}}</span>
     {{/if}}
     {{/if}}
 {{> nav-tree navigation=./items level=(increment ../level)}}

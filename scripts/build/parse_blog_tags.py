@@ -90,12 +90,12 @@ with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_fil
     featured_tags_element = data.find("div", id="featured_tags_list")
     featured_tags_element.clear()
     for t in featured_tags:
-        name = t.replace(" ", "_")
+        name = t.replace(" ", "-")
         ft_link = data.new_tag("p")
         comma = data.new_tag("span")
         comma.string = ","
         ft_link["tabindex"] = "0"
-        ft_link["role"] = "listitem"
+        ft_link["role"] = "button"
         ft_link["class"] = "featured_tag"
         ft_link["data-tag-id"] = name
         ft_link.string = "{% t blog.tags."+name+" %}"

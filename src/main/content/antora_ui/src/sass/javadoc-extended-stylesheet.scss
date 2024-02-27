@@ -18,7 +18,7 @@
  * appended to the end of the combined file.
  */
 
-body {
+ body {
     background-color:white;
     font-family: Asap, 'DejaVu Sans', Arial, Helvetica, sans-serif;
 }
@@ -121,9 +121,13 @@ ul.navList li{
 }
 
 /* doesn't seem to pick up this on focus */
-.clickableNavListTab, ul.navList li:focus{
+ul.navList li:focus{
     background-color: #D6D9E4;
     color: #253441;
+}
+
+.clickableNavListTab{
+    color:#bb7a2a;
 }
 
 .clickableNavListTab:hover{
@@ -157,6 +161,10 @@ ul.navListSearch li label, ul.navListSearch li span {
 
 ul.blockList ul.blockList ul.blockList li.blockList h3 {
     background-color:#C8CCD8;
+}
+
+ul.blockList ul.blockList li.blockList h3{
+    margin:0 0;
 }
 
 .contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
@@ -209,17 +217,28 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
 .usesSummary caption span {
     background-color:#D6D9E4;
     font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    font-size: 35px;
+    font-size: 20px;
+    margin-top: 10px;
 	height: auto;
 }
+
+.memberSummary caption span{
+    font-size: 16px;
+}
+
+
 
 .memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span {
     background-color:#D6D9E4;
 	height: auto;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span {
 	height: auto;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
@@ -399,4 +418,8 @@ label {
 
 .header {
     margin: 0;
+}
+
+div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details ul.blockList ul.blockList ul.blockListLast li.blockList h4{
+    margin-top:-10px;
 }

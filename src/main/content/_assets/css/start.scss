@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-main {
+ main {
     margin-top: -60px;
 
     @media (max-width: 991.98px) {
@@ -237,15 +237,30 @@ html, body {
     }
 
     #starter_warnings {
+        background-color: #313653;
         position: relative;
         max-width: 900px;
+        margin-bottom: 40px;
+        border-radius: 7px;
+    }
+
+    #starter_warnings li {
+        color: white;
+        margin-top: 0px;
+        margin-bottom:0px;
+        &:first-child {
+            padding-top: 20px;
+        }
+
+        &:last-of-type{
+            padding-bottom: 20px;
+        }
     }
 
     #starter_warnings p {
         color: white;
-        background-color: #313653;
-        padding: 10px 20px;
-        margin-bottom: 40px;
+        padding: 0;
+        margin: 0;
     }
 
     .ind_starter_warning {
@@ -262,8 +277,8 @@ html, body {
         position: absolute;
         width: 12px;
         height: 12px;
-        top: calc(50% - 6px);
-        right: 12px;
+        top: 8px;
+        right: 8px;
 
         &:hover {
             cursor: pointer;
@@ -321,6 +336,31 @@ html, body {
     }
 }
 
+.section_title .anchor {
+  position: absolute;
+  text-decoration: none;
+  width: 1.75ex;
+  margin-left: -1.5ex;
+  visibility: hidden;
+  font-size: 0.8em;
+  font-weight: normal;
+  padding-top: 0.2em;
+}
+
+.section_title .anchor::before {
+  content: "\00a7";
+}
+
+.section_title:hover .anchor {
+  visibility: visible;
+}
+
+@media screen and (max-width: 580px){
+   .section_title .anchor{
+    font-size: 0.8em;
+    margin-left: -1ex;
+   } 
+}
 .code_container {
     background-color: #F1F4FE;
     color: #24243B;
