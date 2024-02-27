@@ -14,6 +14,7 @@ function addVersionClick() {
   if ($(".feature_version").length === 1) {
     // If there's just one version, then disable the hover/click behavior for the version.
     $(".feature_version").css("cursor", "default");
+    $(".feature_version").attr("role","text");
     return;
   }
   var onclick = function(event) {
@@ -32,7 +33,11 @@ function acivateNavMenu() {
 }
 
 function highlightSelectedVersion() {
-  var url = window.location.href;
+  if (window.location.hash) {
+    var url = window.location.href.split('#')[0];
+  } else {
+    var url = window.location.href;
+  }
   var version = url.substring(url.lastIndexOf("/") + 1);
   var versionHref = $('.feature_version[href="' + version + '"]');
   if (versionHref.length === 1) {
