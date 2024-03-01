@@ -17,7 +17,7 @@ cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 curl -v -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
 
 set +e
-source /usr/local/rvm/scripts/rvm || true
+source /Users/navaneeth/.rvm/scripts/rvm || true
 set -e
 
 rvm requirements

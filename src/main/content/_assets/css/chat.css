@@ -1,0 +1,279 @@
+@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+body {
+    font-family: Asap;
+    margin: 0 0 0 1px;  /* mark sure the layout does not cover the left border of the broswer */
+    overflow: hidden;  /* to hide the scrollbar as scrollbar is not needed */
+}
+
+.bankHeadingBlock {
+    height: 36px;
+    background-color: #deedf7;
+}
+
+.bankHeadingBlockFlexContainer { /* The same flexbox will be used to hold the bank heading with and without the account in it */
+    height: 36px;
+    background-color: #deedf7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bankHeadingBlockFlexContainer > span {
+    margin: auto 10px auto auto;
+}
+
+.bankHeadingBlockFlexContainer > span > img {
+    height: 24px;
+    width: 24px;
+    opacity: 0.41;
+    padding-left: 10px;
+}
+
+.bankHeading {
+    font-weight: 500;
+    font-size: 16px;
+    color: #5E6B8D;
+    letter-spacing: 0;
+    text-align: left;
+    padding: 9px 0px 9px 18px;
+}
+
+.chatAdvisorCount {
+    font-size: 16px;
+    color: #6f7878;
+    letter-spacing: 0;
+    text-align: left;
+    padding: 17px 0px 0px 17px;
+}
+
+.chatIntro {
+    /* background: #F2FAFF; */
+    background-color: rgba(222,237,247,0.44);
+    height: 50px;
+}
+
+.chatIcon {
+    height: 16px;
+    width: 16px;
+    margin: 18px 0 0 16px;
+    vertical-align: text-bottom;
+}
+
+.chatIntroText {
+    font-size: 16px;
+    color: #272727;
+    letter-spacing: 0;
+    text-align: left;
+    padding: 17px 0px 15px 8px;
+}
+
+.advisorChatBlock {
+    /*background: #92e6a5;*/
+    background: #FAE0CF;
+    border-radius: 13px;
+    margin: 11px 20px 0px 17px;
+    width: 70%;
+}
+
+.flexContainer {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.advisorInitialBlock {
+    opacity: 0.76;
+    /*border:1px solid #34bc6e;*/
+    border:1px solid #803C00;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin: 10px 0px 8px 10px;
+    /*margin: 12px 0 0 15px;*/
+    background-color: #ffffff;
+    flex: 0 0 30px;  /* make sure the width is honored and fixed in size */
+}
+
+.advisorInitial {
+    color: #803C00; /* #34bc6e; */
+    float: left;  /* The rest of the css here is to position the text in the middle of the circle */
+    width: 100%;
+    padding-top: 50%;
+    line-height: 1em;
+    margin-top: -0.5em;
+    text-align: center;
+}
+
+.advisorChat {
+    font-size: 14px;
+    color: #272727;
+    letter-spacing: 0;
+    line-height: 20px;
+    text-align: left;
+    margin: 12px 19px 12px 14px;
+    /*margin: 8px 19px 12px 14px;*/
+    word-break: break-word;
+}
+
+.advisorName {
+    font-weight: 500;
+}
+
+.customerChatBlock {
+    background: #eaeaea;
+    width: 99.8%;
+    height: 60px;
+    bottom: 0px;
+    position: absolute;
+}
+
+.customerChatInput {
+    margin: 15px 10px 13px 11px;
+    height: 32px;
+    background: #ffffff;
+    color: #696969;
+    border-radius: 4px;
+    padding: 0;
+    border: 0;
+    flex: 1;
+    font-size: 12px;
+    padding-left: 15px;
+}
+
+.customerChatSubmitButton {
+    margin: 15px 13px 13px 0;
+    background:#6F7878;
+    color: #ffffff;
+    border-radius: 2px;
+    width: 83px;
+    height: 32px;
+    font-size: 12px;
+}
+
+.errorTextBox {
+    font-size: 16px;
+    color :#272727;
+    letter-spacing: 0;
+    line-height: 26px;
+    margin: 0px 42px 0px 40px;
+    text-align: center;
+}
+
+.spacing {
+    margin-top: 87px;
+}
+
+@keyframes blink {
+    /**
+     * At the start of the animation the dot
+     * has an opacity of .2
+     */
+    0% {
+      opacity: .2;
+    }
+    /**
+     * At 20% the dot is fully visible and
+     * then fades out slowly
+     */
+    20% {
+      opacity: 1;
+    }
+    /**
+     * Until it reaches an opacity of .2 and
+     * the animation can start again
+     */
+    100% {
+      opacity: .2;
+    }
+}
+
+.dotdotdot {
+    text-align: center;
+    font-size: 40px;
+    margin: 37px 0px 19px 0px;
+}
+
+.dotdotdot span {
+    /**
+     * Use the blink animation, which is defined above
+     */
+    animation-name: blink;
+    /**
+     * The animation should take 1.4 seconds
+     */
+    animation-duration: 1.4s;
+    /**
+     * It will repeat itself forever
+     */
+    animation-iteration-count: infinite;
+    /**
+     * This makes sure that the starting style (opacity: .2)
+     * of the animation is applied before the animation starts.
+     * Otherwise we would see a short flash or would have
+     * to set the default styling of the dots to the same
+     * as the animation. Same applies for the ending styles.
+     */
+    animation-fill-mode: both;
+}
+
+.dotdotdot span:nth-child(2) {
+    /**
+     * Starts the animation of the third dot
+     * with a delay of .2s, otherwise all dots
+     * would animate at the same time
+     */
+    animation-delay: .2s;
+}
+
+.dotdotdot span:nth-child(3) {
+    /**
+     * Starts the animation of the third dot
+     * with a delay of .4s, otherwise all dots
+     * would animate at the same time
+     */
+    animation-delay: .4s;
+}
+
+.fallbackForm {
+    margin: 15px 16px;
+    line-height: 26px;
+    padding: 0px;
+}
+
+.fallbackForm  p {
+    margin-bottom: 8px;
+}
+
+.timeChoices input {
+    margin-bottom: 9px;
+}
+
+.timeChoices input[type="radio"] {
+    border: 1px solid #95C4F3;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+}
+
+.scheduleButton {
+    margin: 10px 16px;
+    padding: 0px 16px 0px 17px;
+    background-color: #6F7878;
+    border-radius: 2px;
+    width: 83px;
+    height: 32px;
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0;
+    line-height: 26px;
+    text-align: left;
+    border: none;
+}
+
+.scheduleButton:disabled {
+    background-color: #b6b6b6;
+}
+
+.timeResponse {
+    margin-top: 40px;
+    display: none;
+}

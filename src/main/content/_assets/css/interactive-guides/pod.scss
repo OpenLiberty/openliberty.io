@@ -1,0 +1,126 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+.podContainer {
+  overflow: hidden;
+  
+  @media (min-width: 1170px) {
+    border: 1px solid #c8d6fb;
+    border-radius: 4px 4px 4px 4px;
+    background: rgba(255,255,255,0.75);
+    height: 100%;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+.pod-animation-slide-from-right {
+  position: relative;
+  -webkit-animation-name: animate-slide-from-right;
+  -webkit-animation-duration: 1s;
+  animation-name: animate-slide-from-right;
+  animation-duration: 1s;
+  height: 100%;
+  @media (max-width: 768px) {
+    background: inherit;
+  }
+}
+
+.pod-animation-slide-from-right:focus {
+  outline: none;
+}
+
+.pod-animation-slide-from-left {
+  position: relative;
+  -webkit-animation-name: animate-slide-from-left;
+  -webkit-animation-duration: 1s;
+  animation-name: animate-slide-from-left;
+  animation-duration: 1s;
+  height: 100%;
+  @media (max-width: 768px) {
+    background: inherit;
+  }
+}
+
+.pod-animation-slide-from-left:focus {
+  outline: none;
+}
+
+@-webkit-keyframes animate-slide-from-right {
+  from { right:-250px; opacity:0 } 
+  to { right:0px; opacity:1 }
+}
+
+@-webkit-keyframes animate-slide-from-left {
+  from { left:-250px; opacity:0 } 
+  to { left:0px; opacity:1 }
+}
+
+@keyframes animate-slide-from-right { 
+  from{ right:-250px; opacity:0 } 
+  to{ right:0; opacity:1 }
+}
+@keyframes animate-slide-from-left { 
+  from{ left:-250px; opacity:0 } 
+  to{ left:0; opacity:1 }
+}
+
+.pod-animation-slidedown {
+  position: relative;
+  -webkit-animation-name: animate-slidedown;
+  -webkit-animation-duration: 1s;
+  animation-name: animate-slidedown;
+  animation-duration: 1s;
+  height: inherit;
+  @media (max-width: 768px) {
+    background: inherit;
+  }
+}
+
+.pod-animation-slidedown:focus {
+  outline: none;
+}
+
+@-webkit-keyframes animate-slidedown {
+  from { top: -15px; opacity:0 } 
+  to { top: 0px; opacity:1 }
+}
+
+@keyframes animate-slidedown { 
+  from{ top: -15px; opacity:0 } 
+  to{ top: 0px; opacity:1 }
+}
+
+.pod-animation-slideup {
+  position: relative;
+  -webkit-animation-name: animate-slideup;
+  -webkit-animation-duration: 1s;
+  animation-name: animate-slideup;
+  animation-duration: 1s;
+  height: inherit;
+  background: inherit;
+}
+
+.pod-animation-slideup:focus {
+  outline: none;
+}
+
+@-webkit-keyframes animate-slideup {
+  from { bottom: -15px; opacity:0 } 
+  to { bottom: 0px; opacity:1 }
+}
+
+@keyframes animate-slideup { 
+  from { bottom: -15px; opacity:0 } 
+  to { bottom: 0px; opacity:1 }
+}
