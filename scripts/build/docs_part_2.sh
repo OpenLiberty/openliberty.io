@@ -7,6 +7,17 @@ python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py
 timer_end=$(date +%s)
 echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
+# save html for translation here before cloning in Javadocs
+mkdir -p generated-html
+cp -r target/jekyll-webapp/docs/. generated-html
+rm -rf generated-html/*/_images
+rm -rf generated-html/*/*/_images
+rm -rf generated-html/*/reference/javadoc
+rm -rf generated-html/*/reference/feature/*/
+
+# try to free up room for docs
+rm -rf target/jekyll-webapp/docs/*/reference/feature/*/
+
 # Javadoc Portion of Docs
 echo "Begin building javadoc content"
 $BUILD_SCRIPTS_DIR/javadoc_clone.sh

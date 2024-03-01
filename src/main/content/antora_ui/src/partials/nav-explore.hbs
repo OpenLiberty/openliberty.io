@@ -4,7 +4,7 @@
       <div class="context">
         <span class="title">Version</span>
         <a class="version" href="#">{{page.componentVersion.displayVersion}}</a>
-        <img src="../../_/img/chevron.svg" class="version_select_chevron"/>
+        <img src="/_/img/chevron.svg" class="version_select_chevron"/>
       </div>
       <ul class="components">
         {{#each site.components}}
@@ -19,7 +19,7 @@
                   {{#each ( sort_component_versions ../../page.versions) }}
                     {{#if (eq ./version ../version)}}
                         {{#if missing }}
-                          <a href="{{getlang ./url}}/docs/{{./version}}/noversion.html?ref={{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                          <a href="/docs/{{./version}}/noversion.html?ref={{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
                         {{else}}
                           <a href="{{{ relativize ./url }}}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
                         {{/if}}
@@ -37,10 +37,10 @@
     </div>
     <div class="doc_select language_select">
       <div class="context lang_picker">
-        <img src="../../_/img/filled_globe.svg" class="globe_icon"/>
+        <img src="/_/img/filled_globe.svg" class="globe_icon"/>
         <a class="version" href="#">
         </a>
-        <img src="../../_/img/chevron.svg" class="version_select_chevron"/>
+        <img src="/_/img/chevron.svg" class="version_select_chevron"/>
       </div>
         <ul class="components language_list">
           <li class="component">
