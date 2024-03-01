@@ -93,6 +93,16 @@ var navigation = (function(){
     closeVersionPicker();
   });
 
+  $('.components .versions li a[href*="noversion.html?ref"').each(function(){
+    if(window.location.pathname.includes("/ja/")){
+      var original = $(this).attr("href");
+      $(this).attr("href", "/ja"+original)
+    } else if(window.location.pathname.includes("/zh-Hans/")){
+      var original = $(this).attr("href");
+      $(this).attr("href", "/ja"+original)
+    }
+  })
+
   $('.components .versions li').on('click', function(e) {
     e.stopPropagation();
     var li = $(this);
