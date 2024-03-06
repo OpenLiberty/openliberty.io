@@ -31,6 +31,28 @@ $BUILD_SCRIPTS_DIR/antora_build_docs.sh
 timer_end=$(date +%s)
 echo "Total execution time for cloning playbook and building docs via Antora: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
+git clone https://github.com/OpenLiberty/docs-translation.git --branch main
+
+pushd docs-translation
+
+rm -rf en/*
+cp -R ../src/main/content/docs/build/site/docs/latest/ en/
+rm -rf en/_images
+rm -rf en/*/_images
+if [ -z "$(git status -s)" ]; then
+    echo "Translation repo is up to date"
+else
+    echo "Updating translation repo"
+    git add --all
+    git commit -m "Updated $(date '+%Y-%m-%d %H:%M:%S')"
+    git push
+    echo "Finished updating translation repo"
+fi
+
+popd
+
+rm -rf docs-translation
+
 pushd target/jekyll-webapp/ja/docs
 
 for d in ../../../../src/main/content/docs/build/site/docs/* ; do
