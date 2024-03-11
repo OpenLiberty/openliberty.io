@@ -2,9 +2,6 @@
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 
-# remove extra feature folders
-rm -rf target/jekyll-webapp/docs/*/reference/feature/*/
-
 # Javadoc Portion of Docs
 echo "Begin building javadoc content"
 $BUILD_SCRIPTS_DIR/javadoc_clone.sh
