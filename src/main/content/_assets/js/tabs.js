@@ -61,10 +61,8 @@ function setDefaultTab() {
 $(document).ready(function() {
     // show content for clicked OS tab
     $('.tab_link').on('click', function(event) {
-        // hide all tab content and remove active class from all links
-        $(".tab_content").hide();
-        $(".tab_link").removeClass("active");
-        
+        $(this).parent().find('.tab_content').hide();
+        $(this).parent().find('.tab_link').removeClass("active");        
         // get class of clicked tab and class of its respective content section
         var class_list = this.classList;
         for (var i = 0; i < class_list.length; i++) {
@@ -74,10 +72,11 @@ $(document).ready(function() {
                 var tab_class = "." + class_name;
             }
         }
-
         // show content of clicked tab and add active class to clicked tab
-        $(tab_content).show();
-        $(tab_class).addClass("active");
+        $(this).parent().find('.tab_content' + tab_content).show();
+        $(this).parent().find('.tab_link' + tab_class).addClass("active");
+        handleFloatingCodeColumn();
+        handleFloatingTableOfContent();
     });
 });
 
