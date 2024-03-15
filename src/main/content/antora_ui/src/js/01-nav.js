@@ -12,6 +12,17 @@ var navigation = (function(){
     var $menuPanel = $navContainer.find('[data-panel=menu]').eq(0);
     if ($menuPanel.length <= 0) return;
 
+    // fix TOC reference section from html minification changes
+    var $referenceNav = $("span:contains(Reference)");
+    if($referenceNav.length <= 0) return;
+    var $addTo = $referenceNav.next();
+    var $start = $referenceNav.parent().next();
+    while($start.length > 0){
+      var $temp = $start.next();
+      $start.appendTo($addTo);
+      $start = $temp;
+    }
+
     // Expand all first level doc categories
     $(".nav-menu > .nav-list > .nav-item").addClass('is-active');
 

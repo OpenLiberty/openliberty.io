@@ -14,6 +14,7 @@ function addVersionClick() {
   if ($(".feature_version").length === 1) {
     // If there's just one version, then disable the hover/click behavior for the version.
     $(".feature_version").css("cursor", "default");
+    $(".feature_version").attr("role","text");
     return;
   }
   var onclick = function(event) {
