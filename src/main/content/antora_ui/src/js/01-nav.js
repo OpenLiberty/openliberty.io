@@ -14,13 +14,14 @@ var navigation = (function(){
 
     // fix TOC reference section from html minification changes
     var $referenceNav = $("span:contains(Reference)");
-    if($referenceNav.length <= 0) return;
-    var $addTo = $referenceNav.next();
-    var $start = $referenceNav.parent().next();
-    while($start.length > 0){
-      var $temp = $start.next();
-      $start.appendTo($addTo);
-      $start = $temp;
+    if($referenceNav.length > 0) {
+      var $addTo = $referenceNav.next();
+      var $start = $referenceNav.parent().next();
+      while($start.length > 0){
+        var $temp = $start.next();
+        $start.appendTo($addTo);
+        $start = $temp;
+      }
     }
 
     // Expand all first level doc categories
