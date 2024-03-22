@@ -89,8 +89,8 @@ echo "Total execution time for parsing the features toc: '$(date -u --date @$(( 
 
 rm -rf docs-translation
 
-# echo "Minifying Docs HTML"
-# html-minifier --input-dir target/jekyll-webapp/docs --output-dir target/jekyll-webapp/docs --file-ext html --collapse-whitespace --remove-comments
-# echo "HTML minification complete"
+echo "Minifying Docs HTML"
+html-minifier --input-dir target/jekyll-webapp/docs --output-dir target/jekyll-webapp/docs --file-ext html --collapse-whitespace --remove-comments
+echo "HTML minification complete"
 
 echo "Finished building and prepping all Antora content"
