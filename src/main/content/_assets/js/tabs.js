@@ -77,7 +77,6 @@ $(document).ready(function() {
         $(this).parent().find('.tab_link' + tab_class).addClass("active");
         handleFloatingCodeColumn();
         handleFloatingTableOfContent();
-      //  handleTOCScrolling();
     });
 });
 
