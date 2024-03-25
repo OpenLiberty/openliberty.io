@@ -73,7 +73,6 @@ $(document).ready(function() {
                 var tab_class = "." + class_name;
             }
         }
-
         // show content of clicked tab and add active class to clicked tab
         $(this).parent().find('.tab_content' + tab_content).show();
         $(this).parent().find('.tab_link' + tab_class).addClass("active");
