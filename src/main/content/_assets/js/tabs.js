@@ -67,13 +67,12 @@ $(document).ready(function() {
         // get class of clicked tab and class of its respective content section
         var class_list = this.classList;
         for (var i = 0; i < class_list.length; i++) {
-            var class_name = class_list[i];
+            class_name = class_list[i];
             if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
                 var tab_content = "." + class_name.replace("link", "section");
                 var tab_class = "." + class_name;
             }
         }
-
         // show content of clicked tab and add active class to clicked tab
         $(this).parent().find('.tab_content' + tab_content).show();
         $(this).parent().find('.tab_link' + tab_class).addClass("active");
