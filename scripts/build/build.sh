@@ -33,7 +33,6 @@ echo "Total execution time for running antora.sh build: '$(date -u --date @$(( $
 # remove unnecessary folders
 rm -rf target/jekyll-webapp/docs/*/reference/feature/*/
 rm -rf target/jekyll-webapp/guides/guide-*/
-rm -rf target/jekyll-webapp/guides/iguide-*/
 
 # Run Gzip for compression of html,js,css
 source $BUILD_SCRIPTS_DIR/gzip.sh
