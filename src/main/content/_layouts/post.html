@@ -23,6 +23,7 @@ js: post
                 <a id="blog_link" href="{{baseURL}}/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">{% t blog.see_all_blog_posts %}</a>
                 <div class="share_post_container">
                     {% assign page_title = page.title | replace: "'" , "\\\\'" %}
+                    <a class="twitter_link" href="https://twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                     <a class="reddit_link" href="https://www.reddit.com/submit" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
                 </div>
                 <h1 id="post_title">{{ page.title | escape }}</h1>
@@ -101,6 +102,7 @@ js: post
             {{ content }}
             <div class="share_post_container">
                 {% assign page_title = page.title | replace: "'" , "\\\\'" %}
+                <a class="twitter_link" href="https://twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                 <a class="reddit_link" href="https://www.reddit.com/submit" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
             </div>
             <div id="blog_link_container">
@@ -116,5 +118,6 @@ js: post
 </div>
 
 <div class="d-none">
+    <img src="/img/twitter_link_hover.svg">
     <img src="/img/reddit_link_hover.svg">
 </div>
