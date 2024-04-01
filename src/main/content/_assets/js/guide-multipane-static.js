@@ -217,6 +217,8 @@ function showPrereqsPopup() {
         "overflow-y": "hidden",
     });
     $("#code_column_content").attr("aria-disabled", true);
+    $("#code_column_content").css("user-select", "none");
+    $(".CodeRay.highlight").css("cursor", "default");
 }
 
 function hidePrereqsPopup() {
@@ -232,6 +234,8 @@ function hidePrereqsPopup() {
     });
     $("#code_column_content").removeAttr("aria-disabled");
     $(".code_column_tab").removeAttr("aria-disabled");
+    $("#code_column_content").css("user-select", "auto");
+    $(".CodeRay.highlight").css("cursor", "text");
 }
 
 /*
