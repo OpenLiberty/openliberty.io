@@ -464,10 +464,6 @@ function getTags(callback) {
 }
 
 $(document).ready(function () {
-    window.scrollTo({
-        top: 1,
-      });
-      
     getTags(function () {
         $("#tags_container:empty").prev().hide();
         $(window).trigger("scroll");
