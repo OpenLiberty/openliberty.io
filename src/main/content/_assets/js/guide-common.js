@@ -883,5 +883,8 @@ $(window).on("load", function () {
         if (location.hash) {
             handleFloatingTableOfContent();
         }
+        window.scrollTo({
+            top:1,
+        });
     });
 });
