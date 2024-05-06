@@ -71,7 +71,7 @@ public class SecurityFilter implements Filter {
             response.setHeader("X-Content-Type-Options", "nosniff");
              // Mitigating cross site scripting (XSS) from other domains.
             response.setHeader("Content-Security-Policy",
-                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com *.twitter.com *.twimg.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud https://docs.oracle.com/javase/8/docs/api/");
+                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud https://docs.oracle.com/javase/8/docs/api/");
 
             // Limits the information sent cross-domain and does not send the origin name.
             response.setHeader("Referrer-Policy", "no-referrer");
