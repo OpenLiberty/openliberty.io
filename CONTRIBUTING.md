@@ -2,6 +2,8 @@
 
 Anyone can contribute to the openliberty.io project and we welcome your contributions!
 
+https://github.com/OpenLiberty/openliberty.io/wiki/How-to-contribute
+
 ## Contributor License Agreement
 
 In order for us to accept pull requests, you must declare that you wrote the code or, at least, have the right to contribute it to the repo under the open source licence of the project in the repo. It's dead easy...
