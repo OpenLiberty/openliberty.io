@@ -1560,6 +1560,19 @@ $(document).ready(function () {
         }
     })
 
+    $.ajax({
+        url: starter_plugin_url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            $('#maven_version').text(data.mavenVersion);
+            $('#gradle_version').text(data.gradleVersion);  
+        },
+        error: function(error) {
+            console.error('Error fetching Maven and Gradle plugin versions:', error);
+        }
+    });
+
     $(window).on('scroll', function (event) {
         // start animation if images are in viewport
         if ($('#bottom_images_container').isInViewport()) {
@@ -1597,17 +1610,3 @@ $(window).on('load', function () {
     });
 });
 
-$(window).on('load', function () {
-    $.ajax({
-        url: starter_plugin_url,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            $('#maven_version').text(data.mavenVersion);
-            $('#gradle_version').text(data.gradleVersion);  
-        },
-        error: function(error) {
-            console.error('Error fetching Maven and Gradle plugin versions:', error);
-        }
-    });
-});
