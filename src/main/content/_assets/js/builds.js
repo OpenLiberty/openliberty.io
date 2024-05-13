@@ -24,7 +24,6 @@ var starter_domain =
     isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
-var starter_plugin_url= starter_domain+ '/api/start/plugin-versions';
 var failed_builds_request = false;
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
@@ -1596,19 +1595,3 @@ $(window).on('load', function () {
         }
     });
 });
-
-$(window).on('load', function () {
-    $.ajax({
-        url: starter_plugin_url,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            $('#maven_version').text(data.mavenVersion);
-            $('#gradle_version').text(data.gradleVersion);  
-        },
-        error: function(error) {
-            console.error('Error fetching Maven and Gradle plugin versions:', error);
-        }
-    });
-});
-
