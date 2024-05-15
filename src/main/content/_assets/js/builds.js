@@ -130,21 +130,27 @@ function getPublicKeyURL(liberty_version) {
     var liberty_versions_using_2023_pem = ["23.0.0.2", "23.0.0.3", "23.0.0.4", "23.0.0.5", "23.0.0.6", 
     "23.0.0.7", "23.0.0.8", "23.0.0.9", "23.0.0.10", "23.0.0.11", "23.0.0.12"];
 
+    var liberty_versions_using_2024_v1_pem = ["24.0.0.1", "24.0.0.2", "24.0.0.3", "24.0.0.4"];
+
     var pem_2021_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
     
     var pem_2023_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem";
 
-    var pem_2024_href =
+    var pem_2024_v1_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem.cer";
+
+    var pem_2024_v2_href = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_05-08-2024.pem.cer"
     
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
         return pem_2021_href;
     } else if(liberty_versions_using_2023_pem.indexOf(liberty_version) > -1) {
         return pem_2023_href;
+    } else if(liberty_versions_using_2024_v1_pem.indexOf(liberty_version) > -1) {
+        return pem_2024_v1_href;
     } else {
-        return pem_2024_href;
+        return pem_2024_v2_href;
     }
 }
 
