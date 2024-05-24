@@ -109,8 +109,10 @@ public class SecurityFilter implements Filter {
                         req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
                     }
                     catch(FileNotFoundException e) {
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        response.sendRedirect("/404.html");
+                        response.reset();
+                        response.setHeader("Content-Type", "text/html");
+                        response.sendError(404);
+                        return;
                     }
                 }
             } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
