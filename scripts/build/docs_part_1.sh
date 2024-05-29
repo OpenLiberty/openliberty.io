@@ -3,7 +3,7 @@ set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
-$BUILD_SCRIPTS_DIR/node_install.sh
+# $BUILD_SCRIPTS_DIR/node_install.sh
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -73,7 +73,7 @@ timer_end=$(date +%s)
 echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
 # only push translated files during prod build
-# if [ "$PROD_SITE" = true ]; then
+if [ "$PROD_SITE" = true ]; then
 
     pushd docs-translation
 
@@ -93,9 +93,9 @@ echo "Total execution time for parsing the features toc: '$(date -u --date @$(( 
 
     popd
 
-# fi
+fi
 
-# rm -rf docs-translation
+rm -rf docs-translation
 
 echo "Parsing translated docs imgs"
 python3 $BUILD_SCRIPTS_DIR/parse_translated_versions.py
