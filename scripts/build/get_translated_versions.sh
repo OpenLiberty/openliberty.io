@@ -7,7 +7,9 @@ for b in $branches; do
         continue
     fi
     IFS=/ read -r org fold <<< "$b"
-    echo $fold
+    if [[ "$fold" == "translation-source-control" ]]; then
+        fold="latest"
+    fi
     mkdir -p ../target/jekyll-webapp/ja/docs/$fold
     mkdir -p ../target/jekyll-webapp/zh-Hans/docs/$fold
     git checkout -f -q $b
