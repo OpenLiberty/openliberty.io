@@ -96,7 +96,6 @@ mkdir -p target/jekyll-webapp/ja/
 mv ja/feed.xml target/jekyll-webapp/ja/
 mv ja/blog target/jekyll-webapp/ja/
 mv ja/assets target/jekyll-webapp/ja/
-mv ja/docs target/jekyll-webapp/ja/
 
 # Simplified Chinese
 rm -rf zh-Hans
@@ -105,4 +104,3 @@ mkdir -p target/jekyll-webapp/zh-Hans/
 mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
 mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
 mv zh-Hans/assets target/jekyll-webapp/zh-Hans/
-mv zh-Hans/docs target/jekyll-webapp/zh-Hans/

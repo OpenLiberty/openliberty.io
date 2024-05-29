@@ -4,7 +4,7 @@
       <div class="context">
         <span class="title">Version</span>
         <a class="version" href="#">{{page.componentVersion.displayVersion}}</a>
-        <img src="/_/img/chevron.svg" class="version_select_chevron"/>
+        <img src="{{{ relativize "/_/img/chevron.svg" }}}" class="version_select_chevron"/>
       </div>
       <ul class="components">
         {{#each site.components}}
@@ -37,10 +37,10 @@
     </div>
     <div class="doc_select language_select">
       <div class="context lang_picker">
-        <img src="/_/img/filled_globe.svg" class="globe_icon"/>
+        <img src="{{{ relativize "/_/img/filled_globe.svg" }}}" class="globe_icon"/>
         <a class="version" href="#">
         </a>
-        <img src="/_/img/chevron.svg" class="version_select_chevron"/>
+        <img src="{{{ relativize "/_/img/chevron.svg" }}}" class="version_select_chevron"/>
       </div>
         <ul class="components language_list">
           <li class="component">
@@ -49,10 +49,10 @@
                   <a href="{{ @root.page.url }}" translate="no">English</a>
                 </li>
                 <li class="version">
-                  <a href="/ja{{ @root.page.url }}" translate="no">日本語</a>
+                  <a href="{{{ relativize "/ja" }}}{{ @root.page.url }}" translate="no">日本語</a>
                 </li>
                 <li class="version">
-                  <a href="/zh-Hans{{ @root.page.url }}" translate="no">中文（简体)</a>
+                  <a href="{{{ relativize "/zh-Hans" }}}{{ @root.page.url }}" translate="no">中文（简体)</a>
                 </li>
             </ul>
           </li>
