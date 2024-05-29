@@ -64,7 +64,7 @@ $(window).on("load", function() {
       //consider adding logic to order versions from newest to oldest
       versions.forEach(function(v, ind) {
         var ver = v;
-        var matchingVersion = doesFileExist(window.location.origin+"/docs/"+ver+"/"+(folder === "reference" ? "reference/" : "") +(dir !== "" ? preceed1 + "/" : "")+doc,ver)
+        var matchingVersion = doesFileExist(window.location.origin+lang+"/docs/"+ver+"/"+(folder === "reference" ? "reference/" : "") +(dir !== "" ? preceed1 + "/" : "")+doc,ver)
         if(matchingVersion) {
           matches.push(matchingVersion);
         }
