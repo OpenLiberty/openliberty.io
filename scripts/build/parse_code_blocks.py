@@ -9,3 +9,4 @@ for root, dirs, files in os.walk("target/jekyll-webapp/docs/latest"):
                 el['translate']='no'
             with open(os.path.join(root, f), "w") as file:
                 file.write(str(page))
+                
