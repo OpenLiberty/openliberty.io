@@ -77,6 +77,7 @@ if [ "$PROD_SITE" = true ]; then
 
     pushd docs-translation
 
+    git checkout -f main
     rm -rf en/*
     cp -R ../src/main/content/docs/build/site/docs/latest/ en/
     rm -rf en/_images
