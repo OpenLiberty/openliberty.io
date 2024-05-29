@@ -9,7 +9,3 @@ $(window).on("load", function(){
     });
 
 });
-
-$("code, pre").each(function(){
-    this.setAttribute("translate", "no");
-});
