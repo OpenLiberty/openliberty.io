@@ -26,7 +26,7 @@ rvm use 2.7.6 --default
 echo "Ruby version:"
 echo `ruby -v`
 
-gem install ffi -v 1.17.0
+gem install ffi -v 1.16.3
 gem install jekyll -v 3.8.6
 gem install jekyll-assets -v 2.4.0
 gem install jekyll-multiple-languages-plugin
