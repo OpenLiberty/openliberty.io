@@ -32,6 +32,7 @@ gem install jekyll-multiple-languages-plugin
 gem install bundler -v 2.4.22
 gem install faraday -v 2.8.1
 gem install faraday-net_http -v 3.0.2
+gem install ffi -v 1.17.0
 gem install jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
 
 timer_end=$(date +%s)
