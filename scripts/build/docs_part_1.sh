@@ -42,7 +42,6 @@ mkdir -p target/jekyll-webapp/docs/
 cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 cp -r src/main/content/docs/build/site/_ target/jekyll-webapp/ja/
 cp -r src/main/content/docs/build/site/_ target/jekyll-webapp/zh-Hans/
-# rm -rf src/main/content/docs/build
 
 echo "Copying translated versions"
 $BUILD_SCRIPTS_DIR/get_translated_versions.sh
@@ -60,6 +59,8 @@ for f in target/jekyll-webapp/zh-Hans/docs/; do
         cp -r src/main/content/docs/build/site/docs/latest/reference/_images $f/reference/
     fi
 done
+
+rm -rf src/main/content/docs/build
 
 timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
@@ -79,7 +80,7 @@ if [ "$PROD_SITE" = true ]; then
 
     git checkout -f main
     rm -rf en/*
-    cp -R ../src/main/content/docs/build/site/docs/latest/ en/
+    cp -R ../target/jekyll-webapp/docs/latest/ en/
     rm -rf en/_images
     rm -rf en/*/_images
     if [ -z "$(git status -s)" ]; then
