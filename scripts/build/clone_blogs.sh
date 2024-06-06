@@ -47,6 +47,7 @@ mv _posts/zh-Hans _i18n/zh-Hans/_posts
 rm -rf _posts/zh-Hans
 
 # English
+mkdir -p _i18n/en/_posts
 cp -a _posts/. _i18n/en/_posts
 
 mv blogs_temp/img/blog img
