@@ -8,6 +8,12 @@ $(window).on("load", function() {
   $.ready.then(function() {
     var params = new URLSearchParams(window.location.search);
     var ref = params.get("ref");
+    var lang = "";
+    if(window.location.pathname.includes("/ja/")){
+      lang = "/ja"
+    } else if(window.location.pathname.includes("/zh-Hans/")){
+      lang = "/zh-Hans"
+    }
     if (!ref.includes("noversion.html")) {
       var folder = "ROOT";
       var dir = "";
@@ -58,7 +64,7 @@ $(window).on("load", function() {
       //consider adding logic to order versions from newest to oldest
       versions.forEach(function(v, ind) {
         var ver = v;
-        var matchingVersion = doesFileExist(window.location.origin+"/docs/"+ver+"/"+(folder === "reference" ? "reference/" : "") +(dir !== "" ? preceed1 + "/" : "")+doc,ver)
+        var matchingVersion = doesFileExist(window.location.origin+lang+"/docs/"+ver+"/"+(folder === "reference" ? "reference/" : "") +(dir !== "" ? preceed1 + "/" : "")+doc,ver)
         if(matchingVersion) {
           matches.push(matchingVersion);
         }
@@ -79,7 +85,7 @@ $(window).on("load", function() {
       matches.forEach(function(m) {
         $(".doc .paragraph ul").append(
           "<li><a href=" +
-            window.location.origin +
+            window.location.origin + lang +
             "/docs/" +
             m +
             "/" +
@@ -149,7 +155,7 @@ function doesFileExist(urlToFile,version) {
 }
 
 function addContentText() {
-  var version = $(".context .version").text();
+  var version = $(".context .version").first().text();
   var displayText = "The requested document does not exist in the " +
   version +
   " version of the documentation, but it is available in the following versions."
