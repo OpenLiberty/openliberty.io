@@ -29,6 +29,8 @@ git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_t
 echo "git version:"
 git --version
 
+ls -a
+
 # This section is moving the blog posts around for the Jekyll build process
 mv blogs_temp/posts/ .
 mv posts/ _posts
