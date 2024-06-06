@@ -37,10 +37,12 @@ mv posts/ _posts
 ## Separate the blog posts into their respective language folder for the 
 ## `jekyll-multiple-languages-plugin` Jekyll plugin
 # Japanese
+mkdir -p _i18n/ja/_posts
 mv _posts/ja _i18n/ja/_posts
 rm -rf _posts/ja
 
 # Simplified Chinese
+mkdir -p _i18n/zh-Hans/_posts
 mv _posts/zh-Hans _i18n/zh-Hans/_posts
 rm -rf _posts/zh-Hans
 
