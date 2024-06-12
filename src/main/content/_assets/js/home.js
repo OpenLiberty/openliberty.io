@@ -34,13 +34,6 @@ function startAnimation() {
 }
 
 $(document).ready(function() {
-    // add custom css to twitter iframe
-    $('#twitter_iframe_div').on('DOMSubtreeModified propertychange',"#twitter-widget-0", function() {
-        $(".twitter-timeline").contents().find(".timeline-Tweet-media").css("display", "none");
-        $(".twitter-timeline").contents().find(".timeline-Tweet-text").css({"font-size": "16px", "margin-bottom": "-10px"});
-        $(".twitter-timeline").contents().find(".timeline-Body").css("border-bottom", "none");
-    });
-
     $(window).on('scroll', function(event) {
         // start animation if images are in viewport
         if ($('#beam').isInViewport()) {

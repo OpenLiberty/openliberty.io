@@ -43,11 +43,7 @@ i18n-seo-description: seo.blogs
      {% t blog.never_miss_a_post %}
     </h2>
     <p class="blog_subtext">
-     {% t blog.be_sure_to_follow %}
-     <a class="green_link" href="https://twitter.com/OpenLibertyIO" rel="noopener" target="_blank">
-      @openliberty.io
-     </a>
-     {% t blog.twitter_or_subscribe %}
+     {% t blog.be_sure_to_subscribe %}
      <a class="green_link" href='{{ "/feed.xml" | relative_url }}' rel="noopener" target="_blank">
       RSS
      </a>
@@ -399,15 +395,13 @@ i18n-seo-description: seo.blogs
        {% t blog.stay_light_years_ahead %}
       </p>
       <p>
-       {% t blog.follow.part1 %}
-       <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" rel="noopener" target="_blank">
-        @openliberty.io
-       </a>
-       {% t blog.follow.part2 %}
+       {% if site.lang != 'ja' %}
+        {% t blog.follow.part1 %}
+       {% endif %}
        <a class="orange_link_light_background" href='{{ "/feed.xml" | relative_url }}' rel="noopener" target="_blank">
         RSS
        </a>
-       {% t blog.follow.part3 %}
+       {% t blog.follow.part2 %}
       </p>
      </div>
     </div>
