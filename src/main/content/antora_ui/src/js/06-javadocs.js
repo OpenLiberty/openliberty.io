@@ -58,6 +58,18 @@ function addAccessibility() {
     .attr("aria-label", "Footer navigation");
 }
 
+function addAccessibilityFrameless(){
+  var javadoc_container = $("#javadoc_container").contents();
+  javadoc_container
+    .contents()
+    .find("#search-input")
+    .attr("aria-label", "Search");
+  javadoc_container
+    .contents()
+    .find("#reset-button")
+    .attr("aria-label", "Reset the search field");
+}
+
 function addExpandAndCollapseToggleButtons() {
   var javadoc_container = $("#javadoc_container").contents();
   var iframes = javadoc_container.find("iframe");
@@ -400,8 +412,10 @@ function setDynamicIframeContent() {
     var isFrameless = container.contents().find('iframe').length === 0;
     var alocation;
     if (isFrameless) {
+      console.log(window.location.pathname + "frameless")
       alocation = container.contents().attr('location');
     } else {
+      console.log(window.location.pathname + "frame")
       alocation = container
       .contents()
       .find(".leftTop iframe")
@@ -427,12 +441,16 @@ function setDynamicIframeContent() {
   if (targetPage.class) {
     setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + targetPage.class);
   }
-  updateTitle(targetPage.package);
+  updateTitle(targetPage.package); 
+  var isexternal = $("#javadoc_container").contents().find(".external-link").length !== 0;
+  if(isexternal){
+    $("#javadoc_container").contents().find(".external-link").attr('target','_blank');
+  }
 }
 
 // Update title in browser tab to show current page
 function updateTitle(currentPage) {
-  if (currentPage !== undefined && currentPage !== "allclasses-frame.html") {
+  if (currentPage !== undefined && currentPage !== "allclasses-frame.html" && currentPage !== "allclasses-index.html") {
     var currentPage = currentPage
       .substring(0, currentPage.lastIndexOf("/"))
       .replace(/\//g, ".");
@@ -852,7 +870,14 @@ $(document).ready(function() {
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
-    addAccessibility();
+    
+    var mainFrame = $('#javadoc_container');
+    var isFrameless = mainFrame.contents().find('iframe').length === 0;
+    if(isFrameless){
+      addAccessibilityFrameless();
+    }else{
+      addAccessibility();
+    }
     addExpandAndCollapseToggleButtons();
     addNavHoverListener();
     addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
