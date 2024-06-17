@@ -412,10 +412,8 @@ function setDynamicIframeContent() {
     var isFrameless = container.contents().find('iframe').length === 0;
     var alocation;
     if (isFrameless) {
-      console.log(window.location.pathname + "frameless")
       alocation = container.contents().attr('location');
     } else {
-      console.log(window.location.pathname + "frame")
       alocation = container
       .contents()
       .find(".leftTop iframe")

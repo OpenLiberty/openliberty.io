@@ -313,20 +313,14 @@ $(function() {
             if (ui.item.category) {
                 var url = getURLPrefix(ui);
                 if (ui.item.category === catModules) {
-                    console.log("inside ===catModules");
                     url += 'module-summary.html';
-                    console.log("url is "+url);
                 } else if (ui.item.category === catPackages) {
-                    console.log("inside ===catPackages");
                     if (ui.item.u) {
                         url = ui.item.u;
-                        console.log("url is "+url);
                     } else {
                         url += ui.item.l.replace(/\./g, '/') + '/package-summary.html';
-                        console.log("url else is "+url);
                     }
                 } else if (ui.item.category === catTypes) {
-                    console.log("inside ===catTypes");
                     if (ui.item.u) {
                         url = ui.item.u;
                     } else if (ui.item.p === UNNAMED) {
@@ -335,7 +329,6 @@ $(function() {
                         url += ui.item.p.replace(/\./g, '/') + '/' + ui.item.l + '.html';
                     }
                 } else if (ui.item.category === catMembers) {
-                    console.log("inside ===catMembers");
                     if (ui.item.p === UNNAMED) {
                         url += ui.item.c + '.html' + '#';
                     } else {
@@ -346,20 +339,14 @@ $(function() {
                     } else {
                         url += ui.item.l;
                     }
-                    console.log("url is "+url);
                 } else if (ui.item.category === catSearchTags) {
-                    console.log("inside ===catSearchTags");
                     url += ui.item.u;
                 }
                 if (top !== window) {
-                    console.log("top is "+top+" and window is "+window);
-                    console.log("pathtoroot is "+ pathtoroot +" and url is "+url);
-                    // parent.classFrame.location = pathtoroot + url;
                     window.location.href = pathtoroot + url
                 } else {
                     window.location.href = pathtoroot + url;
                 }
-                // $('#search-input').focus();
             }
         }
     });
