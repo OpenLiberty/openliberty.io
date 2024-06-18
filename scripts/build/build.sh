@@ -25,6 +25,7 @@ echo "Total execution time for running jekyll.sh build: '$(date -u --date @$(( $
 
 # Build Docs portion of site (uses Antora)
 timer_start=$(date +%s)
+ls
 source $BUILD_SCRIPTS_DIR/docs_part_1.sh
 source $BUILD_SCRIPTS_DIR/docs_part_2.sh
 timer_end=$(date +%s)
