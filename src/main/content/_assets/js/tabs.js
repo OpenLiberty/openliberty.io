@@ -63,11 +63,10 @@ $(document).ready(function() {
     $('.tab_link').on('click', function(event) {
         $(this).parent().find('.tab_content').hide();
         $(this).parent().find('.tab_link').removeClass("active");      
-
         // get class of clicked tab and class of its respective content section
         var class_list = this.classList;
         for (var i = 0; i < class_list.length; i++) {
-            class_name = class_list[i];
+            var class_name = class_list[i];
             if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
                 var tab_content = "." + class_name.replace("link", "section");
                 var tab_class = "." + class_name;
