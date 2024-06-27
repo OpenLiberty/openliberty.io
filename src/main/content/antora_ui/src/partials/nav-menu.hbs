@@ -1,6 +1,18 @@
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu" aria-label="Navigation menu for Open Liberty docs">
+    <div class="nav-menu-filter" >
+      <input type="text" id="filter_titles" aria-label="Filter titles" placeholder="Filter titles...">
+      <button
+        id="clear_filter"
+        type="reset"
+        tabindex="0"
+        aria-label="Clear filter search"
+      >X</button>
+    </div>  
     <h3 class="title"><a href="{{relativize page.componentVersion.url}}">{{page.component.title}}</a></h3>
+    <div class="no-results-container">
+      <b>No titles match</b> 
+    </div>
     {{#if page.navigation}}
     {{> nav-tree navigation=page.navigation}}
     {{/if}}
