@@ -19,8 +19,13 @@ module.exports = defineConfig({
  
   viewportWidth: 1280,
   e2e: {
-    supportFile: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/support/e2e.js',
-    specPattern: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/*.cy.js',
-    downloadsFolder: '__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/downloads',
+    supportFile: '/Users/navaneeth/Desktop/openliberty.io/src/test/cypressjs/cypress/support/e2e.js',
+    specPattern: '/Users/navaneeth/Desktop/openliberty.io/src/test/cypressjs/cypress/e2e/*.cy.js',
+    downloadsFolder: '/Users/navaneeth/Desktop/openliberty.io/src/test/cypressjs/cypress/downloads',
+    setupNodeEvents(on, config) {
+      on('task', {
+          accessibilityChecker: require('cypress-accessibility-checker/plugin')
+      });
+    }
   },
 })
