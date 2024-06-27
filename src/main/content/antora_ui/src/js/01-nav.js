@@ -79,7 +79,6 @@ var navigation = (function(){
     })
   };
 
-  
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
     location.href = $(this)[0].href;
