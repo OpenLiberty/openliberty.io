@@ -2,9 +2,9 @@
 timer_start=$(date +%s)
 
 echo "Install Ruby & required packages/gems"
-# if [ "$LOCAL_BUILD" = false ]; then
-# sudo apt-get -y install gnupg build-essential
-# fi
+if [ "$LOCAL_BUILD" = false ]; then
+sudo apt-get -y install gnupg build-essential
+fi
 
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
@@ -16,9 +16,9 @@ cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 
 curl -v -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
 
-# set +e
-# source /usr/local/rvm/scripts/rvm || true
-# set -e
+set +e
+source /usr/local/rvm/scripts/rvm || true
+set -e
 
 rvm requirements
 rvm install 2.7.6
