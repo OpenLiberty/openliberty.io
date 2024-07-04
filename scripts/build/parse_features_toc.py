@@ -297,22 +297,25 @@ for version in versions:
     print("Modifying the docs TOCs of version " + version + " to remove the duplicate feature versions.")
     feature_version_path = featurePath + version
     for root, dirs, files in os.walk(feature_version_path):
-        for basename in files:
-            if fnmatch.fnmatch(basename, "*.html"):
-                if(basename != "index.html"):
-                    href = path.join(root, basename)
-                    page = BeautifulSoup(open(href), "lxml")
+        if "../" not in root:
+            for basename in files:
+                if fnmatch.fnmatch(basename, "*.html"):
+                    if(basename != "index.html"):
+                        href = path.join(root, basename)
+                        page = BeautifulSoup(open(href), "lxml")
 
-                    # Find the toc and replace it with the modified toc
-                    page_toc = page.find_all('ul', {'class': 'nav-list'})[0]
-                    if page_toc.find('span', text='Features') is not None:
-                        toc_to_replace = page_toc.find('span', text='Features').parent
-                    elif page_toc.find('a', text='Features') is not None:
-                        toc_to_replace = page_toc.find('a', text='Features').parent
-                    toc_to_replace.clear()
-                    toc_to_replace.append(featureTOC)
-                    with open(href, "w") as file:
-                        file.write(str(page))
+                        # Find the toc and replace it with the modified toc
+                        page_toc = page.find_all('ul', {'class': 'nav-list'})[0]
+                        if page_toc.find('span', text='Features') is not None:
+                            toc_to_replace = page_toc.find('span', text='Features').parent
+                        elif page_toc.find('a', text='Features') is not None:
+                            toc_to_replace = page_toc.find('a', text='Features').parent
+                        toc_to_replace.clear()
+                        toc_to_replace.append(featureTOC)
+                        with open(href, "w") as file:
+                            file.write(str(page))
+        else:
+            print("invalid")
 
 timerEnd = time.time()
 print('Total execution time for parsing ToC Features: ', timerEnd - timerStart)
