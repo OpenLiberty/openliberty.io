@@ -315,7 +315,7 @@ for version in versions:
                         with open(href, "w") as file:
                             file.write(str(page))
         else:
-            print("invalid")
+            print("Invalid path for root")
 
 timerEnd = time.time()
 print('Total execution time for parsing ToC Features: ', timerEnd - timerStart)
