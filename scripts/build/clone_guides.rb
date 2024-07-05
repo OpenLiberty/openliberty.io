@@ -58,17 +58,13 @@ repos.each do |element|
     # Clone static & interactive guides that are ready to be published to openliberty.io
     if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
         # Clone the guides, using the dev branch for travis and prod for all other environments.
-        # `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
         system("git","clone","https://github.com/OpenLiberty/#{repo_name}.git","-b","#{guide_branch}","src/main/content/guides/#{repo_name}")
         # # Clone the fallback branch if the guide_branch does not exist for this guide repo.
         if !(directory_exists?(repo_name))
-            # `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{fallback_guide_branch} src/main/content/guides/#{repo_name}`
             system("git","clone","https://github.com/OpenLiberty/#{repo_name}.git","-b","#{fallback_guide_branch}","src/main/content/guides/#{repo_name}")
         end
-
         # Clone the default branch if the fallback_guide_branch does not exist for this guide repo.
         if !(directory_exists?(repo_name))
-            # `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             system("git","clone","https://github.com/OpenLiberty/#{repo_name}.git","src/main/content/guides/#{repo_name}")
         end
     end
