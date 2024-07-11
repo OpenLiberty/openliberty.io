@@ -47,8 +47,7 @@ function javadocRedirect(api,version,jd) {
     port +
     '/docs/latest/reference/javadoc/'+ api +
     version +
-    (pack ? '-javadoc.html?package='+pack+'/package-summary.html&class=': '-javadoc.html?class=') +
-    jd;
+    (pack ? '-javadoc.html?path='+api+version+'-javadoc/'+jd: '-javadoc.html');
   }
   else{
     window.top.location.href =
