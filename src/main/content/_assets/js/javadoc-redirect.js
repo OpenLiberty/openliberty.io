@@ -46,8 +46,7 @@ function javadocRedirect(api,version,jd) {
     window.top.location.hostname +
     port +
     '/docs/latest/reference/javadoc/'+ api +
-    version +
-    (pack ? '-javadoc.html?path='+api+version+'-javadoc/'+jd: '-javadoc.html');
+    version + (pack ? '-javadoc.html?path='+api+version+'-javadoc/'+jd: '-javadoc.html');
   }
   else{
     window.top.location.href =
