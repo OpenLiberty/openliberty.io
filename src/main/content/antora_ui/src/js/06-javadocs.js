@@ -826,13 +826,18 @@ function setFramelessQueryParams(){
       alocation = alocation.substring(24);
     }
 
-    var newURL = new URL(window.location.href);
+    var currentHref= window.location.href;
+    var newURL = new URL(currentHref);
     var queryParams = newURL.searchParams;
     queryParams.set('path', alocation);
-    var search = window.location.search;
-    var hash = window.location.hash;
-    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    window.history.pushState({}, null, newURL);
+    var baseURL = currentHref.split('?')[0].split('#')[0];
+    var newQueryString = '?' + decodeURIComponent(queryParams.toString());
+    var newURL = baseURL + newQueryString + window.location.hash;
+
+    // Navigate to the new URL
+    if(newURL !== currentHref){
+      window.history.replaceState({}, null, newURL);
+    }
   }
 }
 
@@ -932,25 +937,5 @@ $(document).ready(function() {
 
     setDynamicIframeContent();
 
-    window.onpopstate = function(event) {
-      if (event.state) {
-        var mainfr = $("#javadoc_container");
-        var isFrameless = mainfr.contents().find('iframe').length === 0;
-        if (isFrameless) {
-          if (window.history) {
-            window.history.back();
-          }
-        }
-        $.each(event.state, function(key, value) {
-          setIFrameContent(key, value);
-        });
-        // restore the height in case it is collapsed
-        setPackageContainerHeight();
-      } else {
-        // This path is exercised with the initial page
-        setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
-        setIFrameContent(CLASS_FRAME, defaultClassHtml);
-      }
-    };
   });
 });
