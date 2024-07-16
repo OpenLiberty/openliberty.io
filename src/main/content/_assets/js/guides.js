@@ -702,11 +702,11 @@ $(document).ready(function () {
       var total = $(this).find(".guide_column").length;
       // update num_guides
       if (showTotal) {
-        $("#" + $(this).attr("id").replace("_category", "_num_guides")).html(
+        $("#" + $(this).attr("id").replace("_category", "_num_guides")).text(
           "(" + count + "/" + total + " guides)"
         );
       } else {
-        $("#" + $(this).attr("id").replace("_category", "_num_guides")).html(
+        $("#" + $(this).attr("id").replace("_category", "_num_guides")).text(
           "(" + count + " guides)"
         );
       }
