@@ -38,13 +38,26 @@ function javadocRedirect(api,version,jd) {
   }
   var pack = jd.substring(0, jd.lastIndexOf('/'));
   var port = window.top.location.port !== '' ? ':' + window.top.location.port : '';
-  window.top.location.href =
-  'https://' +
-  window.top.location.hostname +
-  port +
-  '/docs/latest/reference/javadoc/'+ api +
-  version +
-  (pack ? '-javadoc.html?package='+pack+'/package-frame.html&class=': '-javadoc.html?class=') +
-  jd;
+  var mainFrame = $('#javadoc_container');
+  var isFrameless = mainFrame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    window.top.location.href =
+    'https://' +
+    window.top.location.hostname +
+    port +
+    '/docs/latest/reference/javadoc/'+ api +
+    version +
+    (pack ? '-javadoc.html?path='+api+version+'-javadoc/'+jd: '-javadoc.html');
+  }
+  else{
+    window.top.location.href =
+    'https://' +
+    window.top.location.hostname +
+    port +
+    '/docs/latest/reference/javadoc/'+ api +
+    version +
+    (pack ? '-javadoc.html?package='+pack+'/package-frame.html&class=': '-javadoc.html?class=') +
+    jd;
+  }
 }
 
