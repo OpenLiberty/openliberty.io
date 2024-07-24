@@ -23,9 +23,26 @@ modifyStylesheetFrameless () {
     mv newstylesheet.css "$1"
 }
 
+modifyStylesheetFramelessSPIAPI () {
+    # Append extra javadoc styling located in the css direcctory to the stylesheet.css located in the javadoc api/spi subdirectories
+    cat src/main/content/antora_ui/src/css/javadoc-extended-stylesheet-frameless-api_spi.css >> "$1"
+
+    # insert extra import to the beginning of the file
+    sed '1 i\
+    @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+    ' "$1" > newstylesheet.css
+    
+    mv newstylesheet.css "$1"
+}
+
 modifySearch () {
     # add url support to search
     cp src/main/content/_assets/js/javadoc-search.js "$1"
+}
+
+modifyFramelessSearch () {
+    # add url support to frameless javadoc search
+    cp src/main/content/_assets/js/javadoc-search-frameless.js "$1"
 }
 
 modifyRedirect () {
@@ -38,14 +55,17 @@ modifyRedirect () {
 
 export -f modifyStylesheet
 export -f modifyStylesheetFrameless
+export -f modifyStylesheetFramelessSPIAPI
 export -f modifySearch
+export -f modifyFramelessSearch
 export -f modifyRedirect
 
-find target/jekyll-webapp/docs -path "*microprofile*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
-find target/jekyll-webapp/docs -path "*liberty-*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
-find target/jekyll-webapp/docs -path "*io.openliberty*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
-find target/jekyll-webapp/docs -path "*com.ibm.websphere.appserver*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
-find target/jekyll-webapp/docs -name search.js  -exec bash -c 'modifySearch {}' \;
+find target/jekyll-webapp/docs -path "*liberty-*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
+find target/jekyll-webapp/docs -path "*microprofile*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
+find target/jekyll-webapp/docs -path "*io.openliberty*/stylesheet.css" -exec bash -c 'modifyStylesheetFramelessSPIAPI {}' \;
+find target/jekyll-webapp/docs -path "*com.ibm.websphere.appserver*/stylesheet.css" -exec bash -c 'modifyStylesheetFramelessSPIAPI {}' \;
+find target/jekyll-webapp/docs -path "*microprofile*" -name search.js -exec bash -c 'modifyFramelessSearch {}' \;
+find target/jekyll-webapp/docs -path "*liberty-*" -name search.js -exec bash -c 'modifyFramelessSearch {}' \;
 find target/jekyll-webapp/docs -name script.js  -exec bash -c 'modifyRedirect {}' \;
 
 timer_end=$(date +%s)
