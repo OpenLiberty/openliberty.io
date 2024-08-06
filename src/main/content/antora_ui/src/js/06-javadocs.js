@@ -368,8 +368,8 @@ function hideFooter(element) {
 
 function addNavHoverListener() {
   var javadoc_container = $("#javadoc_container").contents();
-  var rightFrame = javadoc_container.find(CLASS_FRAME);
-  var tabs = rightFrame.contents().find("ul.navList li:has(a)");
+  var navHeader = javadoc_container.find(".top-nav");
+  var tabs = navHeader.contents().find("li:has(a)");
   tabs.off("mouseover").on("mouseover", function() {
     $(this).addClass("clickableNavListTab");
   });
