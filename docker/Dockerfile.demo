@@ -21,6 +21,8 @@ ENV BUILD_SCRIPTS_DIR /scripts/build
 
 ENV PIPELINE_DEBUG_SCRIPT=false
 
+RUN df -h /
+
 RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 
 #
@@ -71,6 +73,8 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 RUN mkdir target/openliberty-website-1.0-SNAPSHOT/docs
 COPY --from=docs --chown=1001:0 /temp-docs/en/docs /target/openliberty-website-1.0-SNAPSHOT/docs
 
+RUN df -h /
+
 RUN mkdir -p target/openliberty-website-1.0-SNAPSHOT/ja/docs
 COPY --from=docs --chown=1001:0 /temp-docs/ja/docs /target/openliberty-website-1.0-SNAPSHOT/ja/docs
 
@@ -91,6 +95,8 @@ COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 # using featureUtility. 
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
 RUN features.sh
+
+RUN df -h /
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
