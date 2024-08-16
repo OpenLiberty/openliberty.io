@@ -47,7 +47,7 @@ echo "Copying translated versions"
 $BUILD_SCRIPTS_DIR/get_translated_versions.sh
 echo "Finished copying translated versions"
 
-copy ref images to translated verions
+#copy ref images to translated verions
 for f in target/jekyll-webapp/ja/docs/; do
     if [ -d "$f" ]; then
         cp -r src/main/content/docs/build/site/docs/latest/reference/_images $f/reference/
@@ -73,7 +73,7 @@ python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py
 timer_end=$(date +%s)
 echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
-only push translated files during prod build
+#only push translated files during prod build
 if [ "$PROD_SITE" = true ]; then
 
     pushd docs-translation
