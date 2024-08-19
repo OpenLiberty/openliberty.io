@@ -35,11 +35,19 @@ $(document).ready(function () {
     return window.innerWidth > tabletBreakpoint;
   }
 
-  // Remove previous TOC section highlighted and highlight correct step
+  // Remove previous TOC section highlighted, highlight correct step and adjust TOC scroll position
   function updateTOCHighlighting(id) {
     $(".liSelected").removeClass("liSelected");
     var anchor = $("#toc_container a[href='#" + id + "']");
     anchor.parent().addClass("liSelected");
+    updateTOCScrollTop();
+  }
+
+  function updateTOCScrollTop(){
+    var liOffset= ($(".liSelected").offset().top) - ($("#toc_container").offset().top) + $("#toc_container").scrollTop();
+    $("#toc_container").animate({
+      scrollTop: liOffset- $("#toc_container").height()/2 + $(".liSelected").height()/2
+    },100)
   }
 
   // Find the first subcategory header that is visible in the viewport and return the id
@@ -135,7 +143,7 @@ $(document).ready(function () {
     var headerVisibleHeight = getVisibleHeightPx(
       $("#guides_information_container")
     );
-    var tocHeight = $("#toc_container ul").height();
+    var tocHeight = $("#toc_container ul").innerHeight();
     var footerVisibleHeight = getVisibleHeightPx($("footer"));
     var totalHeight = headerVisibleHeight + tocHeight + footerVisibleHeight;
     var windowHeight = $(window).height();
@@ -145,8 +153,27 @@ $(document).ready(function () {
       $("#toc_container").css({
         height: "calc(100vh - " + headerAndFooterHeight + "px)",
       });
-    } else {
-      $("#toc_container").css({ height: "auto" });
+      headerVisibleHeight > 0 ? ($("#toc_container").scrollTop(0)) : null;
+      if(footerVisibleHeight > 0){
+        $("#toc_container").css({
+          position : 'fixed',
+          bottom : footerVisibleHeight+15+"px",
+        }) 
+        $("#toc_container").scrollTop($("#toc_container")[0].scrollHeight); 
+      }
+      else{
+        $("#toc_container").css({
+          position : 'static',
+          bottom :'auto'
+        });
+      }
+    } 
+    else {
+      $("#toc_container").css({ 
+        height : 'auto',
+        position : 'static',
+        bottom : 'auto'
+      });
     }
   }
 
