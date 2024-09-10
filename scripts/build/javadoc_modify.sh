@@ -60,12 +60,10 @@ export -f modifySearch
 export -f modifyFramelessSearch
 export -f modifyRedirect
 
-# find target/jekyll-webapp/docs -path "*liberty-javaee7*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
 find target/jekyll-webapp/docs -path "*liberty-*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
 find target/jekyll-webapp/docs -path "*microprofile*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
 find target/jekyll-webapp/docs -path "*io.openliberty*/stylesheet.css" -exec bash -c 'modifyStylesheetFramelessSPIAPI {}' \;
 find target/jekyll-webapp/docs -path "*com.ibm.websphere.appserver*/stylesheet.css" -exec bash -c 'modifyStylesheetFramelessSPIAPI {}' \;
-# find target/jekyll-webapp/docs -not -path "*microprofile-6.0*" -name search.js  -exec bash -c 'modifySearch {}' \;
 find target/jekyll-webapp/docs -path "*microprofile*" -name search.js -exec bash -c 'modifyFramelessSearch {}' \;
 find target/jekyll-webapp/docs -path "*liberty-*" -name search.js -exec bash -c 'modifyFramelessSearch {}' \;
 find target/jekyll-webapp/docs -name script.js  -exec bash -c 'modifyRedirect {}' \;
