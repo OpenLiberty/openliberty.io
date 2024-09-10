@@ -71,12 +71,6 @@ var navigation = (function(){
       if (e.detail > 1) e.preventDefault();
     });
 
-    $('#filter_titles').on('keyup', filterNavTitles);
-
-    $('#clear_filter').on("click", function () {
-      $('#filter_titles').val('');
-      filterNavTitles();
-    })
   };
 
   $('.components .versions li a').on('click', function(e){
