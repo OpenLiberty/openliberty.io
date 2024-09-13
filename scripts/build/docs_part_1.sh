@@ -13,10 +13,10 @@ echo "npm analysis during build"
 npm ls -g --depth=0
 
 #comment out this below two line in local during build
-if [ "$LOCAL_BUILD" = false ]; then
-ln -s "$(which node)" /usr/bin/node
-ln -s "$(which npm)" /usr/bin/npm
-fi
+# if [ "$LOCAL_BUILD" = false ]; then
+# ln -s "$(which node)" /usr/bin/node
+# ln -s "$(which npm)" /usr/bin/npm
+# fi
 
 #Antora Portion of Docs
 echo "Begin building of Antora portion of docs"
@@ -48,15 +48,17 @@ $BUILD_SCRIPTS_DIR/get_translated_versions.sh
 echo "Finished copying translated versions"
 
 #copy ref images to translated verions
-for f in target/jekyll-webapp/ja/docs/; do
+for f in target/jekyll-webapp/ja/docs/*/; do
     if [ -d "$f" ]; then
-        cp -r src/main/content/docs/build/site/docs/latest/reference/_images $f/reference/
+        cp -r target/jekyll-webapp/docs/latest/_images $f/
+        cp -r target/jekyll-webapp/docs/latest/reference/_images $f/reference/
     fi
 done
 
-for f in target/jekyll-webapp/zh-Hans/docs/; do
+for f in target/jekyll-webapp/zh-Hans/docs/*/; do
     if [ -d "$f" ]; then
-        cp -r src/main/content/docs/build/site/docs/latest/reference/_images $f/reference/
+        cp -r target/jekyll-webapp/docs/latest/_images $f/
+        cp -r target/jekyll-webapp/docs/latest/reference/_images $f/reference/
     fi
 done
 
@@ -65,11 +67,11 @@ rm -rf src/main/content/docs/build
 timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
-python3 $BUILD_SCRIPTS_DIR/parse_code_blocks.py
+python3.11 $BUILD_SCRIPTS_DIR/parse_code_blocks.py
 echo "Completed parsing the code blocks"
 
 timer_start=$(date +%s)
-python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py
+python3.11 $BUILD_SCRIPTS_DIR/parse_features_toc.py
 timer_end=$(date +%s)
 echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
@@ -97,11 +99,17 @@ if [ "$PROD_SITE" = true ]; then
 
 fi
 
-rm -rf docs-translation
 
-echo "Parsing translated docs imgs"
-python3 $BUILD_SCRIPTS_DIR/parse_translated_versions.py
-echo "Completed parsing translated doc imgs"
+echo "Remove non existing translated versions from docs"
+python3.11 $BUILD_SCRIPTS_DIR/edit_translated_versions.py
+
+echo "Rename the latest translated version folder"
+$BUILD_SCRIPTS_DIR/edit_latest_translated_versions.sh
+
+rm -rf docs-translation
+# echo "Parsing translated docs imgs"
+# python3.11 $BUILD_SCRIPTS_DIR/parse_translated_versions.py
+# echo "Completed parsing translated doc imgs"
 
 echo "Minifying Docs HTML"
 html-minifier --input-dir target/jekyll-webapp/docs --output-dir target/jekyll-webapp/docs --file-ext html --collapse-whitespace --remove-comments

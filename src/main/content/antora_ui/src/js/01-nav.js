@@ -1,6 +1,25 @@
+$(document).ready(function() {
+  if((window.location.pathname).includes("/ja/")||(window.location.pathname).includes("/zh-Hans/")){
+     $('.doc_select.language_select .components .version a').each(function() {
+      var $this = $(this);
+      href= $this.attr('href');
+      if (href.includes("../../")) {
+        var newHref = $this.attr('href').replace(/^(\.\.\/)+/, '');      
+        // Ensure the URL starts with a leading slash
+        if (!newHref.startsWith('/')) {
+          newHref = '/' + newHref;
+        }       
+        $this.attr('href', newHref);
+      }
+    });
+  }
+});
+
+
 var navigation = (function(){
   'use strict';
   var init = function(){
+
     var $navContainer = $('.nav-container');
     var $navToggle = $('.nav-toggle');
 
