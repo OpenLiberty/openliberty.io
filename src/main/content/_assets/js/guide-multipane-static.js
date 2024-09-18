@@ -766,7 +766,7 @@ $(document).ready(function () {
         if (inSingleColumnView() && !$(this).hasClass('code_command')){
             $("body").addClass("unscrollable");
             $("#mobile_toc_accordion_container").css({
-                "pointer-events": "none",
+                "display":"none"
             });
             $("#code_column").addClass("modal");
             $("#code_column").css({
