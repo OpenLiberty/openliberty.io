@@ -762,11 +762,11 @@ $(document).ready(function () {
     );
 
     // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
-    $(".hotspot").on("click", function () {
+    $(".hotspot,.view_code").on("click", function () {
         if (inSingleColumnView()) {
             $("body").addClass("unscrollable");
             $("#mobile_toc_accordion_container").css({
-                "pointer-events": "none",
+                "display":"none"
             });
             $("#code_column").addClass("modal");
 
@@ -784,21 +784,18 @@ $(document).ready(function () {
 
             // Set the top of the code to appear underneath the hotspot that was clicked.
             var hotspot_height = $(this).height();
-            var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
-            var height = bottom - scrollTo;
             $("#code_column").css({
                 top: mobile_toc_height + hotspot_height + 5 + "px",
                 left: "0px",
-                height: height,
+                height: "100vh",
             });
-            handleHotspotHover($(this));
         }
     });
 
     $("#dismiss_button").on("click", function () {
         $("body").removeClass("unscrollable");
         $("#mobile_toc_accordion_container").css({
-            "pointer-events": "auto",
+            "display":"table"
         });
         $("#code_column").removeClass("modal");
         $("#code_column").css({
