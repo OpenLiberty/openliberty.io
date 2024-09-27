@@ -22,5 +22,10 @@ module.exports = defineConfig({
     supportFile: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/support/e2e.js',
     specPattern: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/*.cy.js',
     downloadsFolder: '__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/downloads',
+    setupNodeEvents(on, config) {
+      on('task', {
+          accessibilityChecker: require('cypress-accessibility-checker/plugin')
+      });
+    }
   },
 })
