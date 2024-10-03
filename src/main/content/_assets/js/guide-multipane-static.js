@@ -788,6 +788,7 @@ $(document).ready(function () {
                 top: mobile_toc_height + hotspot_height + 5 + "px",
                 left: "0px",
                 height: "100vh",
+                width: "100vw"
             });
         }
     });
