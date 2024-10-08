@@ -428,7 +428,7 @@
   width: 38px;	
   height: 38px;	
   padding: 8.5px 10px;
-  z-index: 97;
+  z-index: 7;
   top: 1px;
   right: 1px;
   &:hover {	
@@ -450,8 +450,9 @@
   }
 }
 
-@media (max-width: 1169.98px){
+@media screen and (max-width: 899.98px){
   .code_command .copy_to_clipboard{right: 42px;}
+  .view_code{display: block;}
 }
 
 @media (max-width: 1199.98px) {
@@ -511,14 +512,6 @@
   #guide_content .code_command > .code_block_wrapper:before {
     display: none;
   }
-
-  .view_code{
-    display: block;
-  }
-
-  .code_command pre{
-    cursor:text;
-  } 
 }
 
 @media (min-width: 1170px) {
@@ -526,14 +519,6 @@
     background-image: inherit;
     margin-bottom: 0;
   }
-
-  .view_code{
-    display: none;
-  }
-
-  .code_command pre{
-    cursor:pointer;
-  } 
 }
 
 @media (min-width: 1440px) {
@@ -606,12 +591,15 @@
 }
 
 .view_code {
+  @media (min-width: 900px){
+    display: none;
+  }
   position: absolute;
   background-color: #eeeff3;
   width: 38px;
   height: 38px;
   padding: 8.5px 10px;
-  z-index: 97;
+  z-index: 7;
   top: 1px;
   right: 1px;
   &:hover {	
