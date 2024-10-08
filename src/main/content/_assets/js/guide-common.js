@@ -483,7 +483,14 @@ $(document).ready(function () {
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
+    $('.code_command .code_block_wrapper').each(function (){
+        $(this).prepend('<div class="view_code" title="View full code"><img src="/img/maximize.svg" alt="View Code"/></div>');
+    });
+
+    (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
+
     $(window).on("resize", function () {
+        (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
         }
