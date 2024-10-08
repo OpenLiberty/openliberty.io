@@ -769,27 +769,8 @@ $(document).ready(function () {
                 "display":"none"
             });
             $("#code_column").addClass("modal");
-
-            var top = $(this).offset().top;
-            var mobile_toc_height = $("#mobile_toc_accordion").height();
-            var scrollTo = top - mobile_toc_height;
-
-            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
-            $("html, body").stop().animate(
-                {
-                    scrollTop: scrollTo,
-                },
-                400
-            );
-
-            // Set the top of the code to appear underneath the hotspot that was clicked.
-            var hotspot_height = $(this).height();
-            var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
-            var height = bottom - scrollTo;
             $("#code_column").css({
-                top: mobile_toc_height + hotspot_height + 5 + "px",
-                left: "0px",
-                height: height,
+                top: "0px",
             });
             ($(this).is('.view_code'))?handleHotspotHover($(this).closest('.hotspot')):handleHotspotHover($(this));
         }
