@@ -487,12 +487,10 @@ $(document).ready(function () {
         $(this).prepend('<div class="view_code" title="View full code"><img src="/img/maximize.svg" alt="View Code"/></div>');
     });
 
-    if (inSingleColumnView()) {
-        $(".code_command").removeClass("hotspot")
-    }
+    (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
 
     $(window).on("resize", function () {
-        (inSingleColumnView()) ? $(".code_command").removeClass("hotspot") : $(".code_command").addClass("hotspot");
+        (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
         }
