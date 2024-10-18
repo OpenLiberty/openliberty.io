@@ -486,11 +486,8 @@ $(document).ready(function () {
     $('.code_command .code_block_wrapper').each(function (){
         $(this).prepend('<div class="view_code" title="View full code"><img src="/img/maximize.svg" alt="View Code"/></div>');
     });
-
-    (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
-
+    
     $(window).on("resize", function () {
-        (inSingleColumnView()) ? $(".code_command").addClass("unclickable") : $(".code_command").removeClass("unclickable");
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
         }
