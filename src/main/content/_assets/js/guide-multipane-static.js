@@ -762,8 +762,8 @@ $(document).ready(function () {
     );
 
     // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
-    $(".hotspot").on("click", function () {
-        if (inSingleColumnView()) {
+    $(".hotspot,.view_code").on("click", function (e) {
+        if (inSingleColumnView() && !$(this).hasClass('code_command')){
             $("body").addClass("unscrollable");
             $("#mobile_toc_accordion_container").css({
                 "pointer-events": "none",
@@ -791,7 +791,7 @@ $(document).ready(function () {
                 left: "0px",
                 height: height,
             });
-            handleHotspotHover($(this));
+            ($(this).is('.view_code'))?handleHotspotHover($(this).closest('.hotspot')):handleHotspotHover($(this));
         }
     });
 
