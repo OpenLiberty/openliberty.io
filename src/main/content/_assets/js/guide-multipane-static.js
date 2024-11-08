@@ -778,9 +778,7 @@ $(document).ready(function () {
 
     $("#dismiss_button").on("click", function () {
         $("body").removeClass("unscrollable");
-        $("#mobile_toc_accordion_container").css({
-            "display":"table"
-        });
+        $("#mobile_toc_accordion_container").show();
         $("#code_column").removeClass("modal");
         $("#code_column").css({
             height: "auto",
