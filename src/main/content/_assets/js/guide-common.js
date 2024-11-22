@@ -488,7 +488,6 @@ $(document).ready(function () {
     });
     
     $(window).on("resize", function () {
-        (inSingleColumnView()) ? $(".code_command").removeClass("hotspot") : $(".code_command").addClass("hotspot");
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
         }
