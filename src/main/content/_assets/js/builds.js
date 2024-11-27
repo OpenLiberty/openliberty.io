@@ -764,6 +764,7 @@ function sortBetaLocations(package_locations_param) {
       "jakartaee9",
       "webProfile10",
       "webProfile9",
+      "microProfile7",
       "microProfile6",
       "microProfile5",
       "javaee8",
