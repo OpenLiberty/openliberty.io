@@ -58,6 +58,7 @@ var allowed_builds = {
         'jakartaee9.zip',
         'javaee8.zip',
         'kernel.zip',
+        'microProfile7.zip',
         'microProfile6.zip',
         'microProfile5.zip',
         'microProfile4.zip',
