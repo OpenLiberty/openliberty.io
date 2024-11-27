@@ -58,6 +58,7 @@ var allowed_builds = {
         'jakartaee9.zip',
         'javaee8.zip',
         'kernel.zip',
+        'microProfile7.zip',
         'microProfile6.zip',
         'microProfile5.zip',
         'microProfile4.zip',
@@ -416,7 +417,7 @@ function render_builds(builds, parent) {
                             package_column =
                                 '<td headers="' +
                                 tableID +
-                                '_package">MicroProfile 6</td>';
+                                '_package">MicroProfile 7</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -905,7 +906,7 @@ function validate_java_eeAndmp_levels() {
     )
     .find(':selected')
     .text(); 
-    if ((mpVersion === '6.0') || (eeVersion == '10.0') || (mpVersion === "6.1")) {
+    if ((mpVersion === '6.0') || (eeVersion == '10.0') || (mpVersion === "6.1") || (mpVersion === "7")) {
         javaVersion = $(
             '.starter_field[data-starter-field=\'j\'] select'
         )
