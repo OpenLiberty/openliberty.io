@@ -418,6 +418,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 6</td>';
+                        } else if (package_name.indexOf('microprofile7') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 7</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
