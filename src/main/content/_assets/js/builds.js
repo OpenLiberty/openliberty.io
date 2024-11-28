@@ -58,6 +58,7 @@ var allowed_builds = {
         'jakartaee9.zip',
         'javaee8.zip',
         'kernel.zip',
+        'microProfile7.zip',
         'microProfile6.zip',
         'microProfile5.zip',
         'microProfile4.zip',
@@ -417,6 +418,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 6</td>';
+                        } else if (package_name.indexOf('microprofile7') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 7</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -758,6 +764,7 @@ function sortBetaLocations(package_locations_param) {
       "jakartaee9",
       "webProfile10",
       "webProfile9",
+      "microProfile7",
       "microProfile6",
       "microProfile5",
       "javaee8",
