@@ -58,6 +58,18 @@ function addAccessibility() {
     .attr("aria-label", "Footer navigation");
 }
 
+function addAccessibilityFrameless(){
+  var javadoc_container = $("#javadoc_container").contents();
+  javadoc_container
+    .contents()
+    .find("#search-input")
+    .attr("aria-label", "Search");
+  javadoc_container
+    .contents()
+    .find("#reset-button")
+    .attr("aria-label", "Reset the search field");
+}
+
 function addExpandAndCollapseToggleButtons() {
   var javadoc_container = $("#javadoc_container").contents();
   var iframes = javadoc_container.find("iframe");
@@ -356,8 +368,8 @@ function hideFooter(element) {
 
 function addNavHoverListener() {
   var javadoc_container = $("#javadoc_container").contents();
-  var rightFrame = javadoc_container.find(CLASS_FRAME);
-  var tabs = rightFrame.contents().find("ul.navList li:has(a)");
+  var navHeader = javadoc_container.find(".top-nav");
+  var tabs = navHeader.contents().find("li:has(a)");
   tabs.off("mouseover").on("mouseover", function() {
     $(this).addClass("clickableNavListTab");
   });
@@ -427,12 +439,16 @@ function setDynamicIframeContent() {
   if (targetPage.class) {
     setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + targetPage.class);
   }
-  updateTitle(targetPage.package);
+  updateTitle(targetPage.package); 
+  var isexternal = $("#javadoc_container").contents().find(".external-link").length !== 0;
+  if(isexternal){
+    $("#javadoc_container").contents().find(".external-link").attr('target','_blank');
+  }
 }
 
 // Update title in browser tab to show current page
 function updateTitle(currentPage) {
-  if (currentPage !== undefined && currentPage !== "allclasses-frame.html") {
+  if (currentPage !== undefined && currentPage !== "allclasses-frame.html" && currentPage !== "allclasses-index.html") {
     var currentPage = currentPage
       .substring(0, currentPage.lastIndexOf("/"))
       .replace(/\//g, ".");
@@ -810,13 +826,18 @@ function setFramelessQueryParams(){
       alocation = alocation.substring(24);
     }
 
-    var newURL = new URL(window.location.href);
+    var currentHref= window.location.href;
+    var newURL = new URL(currentHref);
     var queryParams = newURL.searchParams;
     queryParams.set('path', alocation);
-    var search = window.location.search;
-    var hash = window.location.hash;
-    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    window.history.pushState({}, null, newURL);
+    var baseURL = currentHref.split('?')[0].split('#')[0];
+    var newQueryString = '?' + decodeURIComponent(queryParams.toString());
+    var newURL = baseURL + newQueryString + window.location.hash;
+
+    // Navigate to the new URL
+    if(newURL !== currentHref){
+      window.history.replaceState({}, null, newURL);
+    }
   }
 }
 
@@ -852,7 +873,14 @@ $(document).ready(function() {
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
-    addAccessibility();
+    
+    var mainFrame = $('#javadoc_container');
+    var isFrameless = mainFrame.contents().find('iframe').length === 0;
+    if(isFrameless){
+      addAccessibilityFrameless();
+    }else{
+      addAccessibility();
+    }
     addExpandAndCollapseToggleButtons();
     addNavHoverListener();
     addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
@@ -909,25 +937,5 @@ $(document).ready(function() {
 
     setDynamicIframeContent();
 
-    window.onpopstate = function(event) {
-      if (event.state) {
-        var mainfr = $("#javadoc_container");
-        var isFrameless = mainfr.contents().find('iframe').length === 0;
-        if (isFrameless) {
-          if (window.history) {
-            window.history.back();
-          }
-        }
-        $.each(event.state, function(key, value) {
-          setIFrameContent(key, value);
-        });
-        // restore the height in case it is collapsed
-        setPackageContainerHeight();
-      } else {
-        // This path is exercised with the initial page
-        setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
-        setIFrameContent(CLASS_FRAME, defaultClassHtml);
-      }
-    };
   });
 });

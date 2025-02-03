@@ -19,7 +19,7 @@ $(document).ready(function () {
     if (hash.indexOf("#") === 0) {
       hash = hash.substring(1); // Remove hash
     }
-    window.location.replace(window.location.origin + "/docs/latest/" + hash);
+    window.location.href= window.location.origin + "/docs/latest/" + hash;
   } else if (
     path.indexOf("/docs/ref/feature/") > -1 ||
     path.indexOf("/docs/ref/config/") > -1 ||
@@ -48,13 +48,12 @@ $(document).ready(function () {
           break;
       }
     }
-    window.location.replace(
+    window.location.href =
       window.location.origin +
         "/docs/latest/reference/" +
         resource_type +
         "/" +
         page +
-        hash
-    );
+        hash;
   }
 });

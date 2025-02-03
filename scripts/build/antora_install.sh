@@ -16,7 +16,7 @@ echo "Installing Antora dependencies"
 npm install -g @antora/site-generator@3.0.1
 npm install gulp -g --ignore-scripts
 npm install html-minifier -g
-npm install node-sass@7.0.3 gulp-sass gulp-dart-sass --save-dev
+npm install sass gulp-sass gulp-dart-sass --save-dev
 npm install
 gulp sass:convert
 SOURCEMAPS=true gulp build

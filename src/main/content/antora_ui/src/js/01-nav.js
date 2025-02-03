@@ -86,6 +86,12 @@ var navigation = (function(){
       if (e.detail > 1) e.preventDefault();
     });
 
+    $('#filter_titles').on('keyup', filterNavTitles);
+
+    $('#clear_filter').on("click", function () {
+      $('#filter_titles').val('');
+      filterNavTitles();
+    })
   };
 
   $('.components .versions li a').on('click', function(e){
@@ -168,6 +174,57 @@ var navigation = (function(){
       // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
       $panel.scrollTop(0);
     }
+  }
+
+  //Filter article titles in TOC using text input
+  function filterNavTitles(){
+    let input = $('#filter_titles').val().toLowerCase();
+    let title_match=false;
+    if(input==='' ){
+      $('#clear_filter, .no-results-container').hide();
+      $(".nav-menu > .nav-list > .nav-item").addClass('is-active');
+      $('.nav-menu > .nav-list >.nav-item .nav-item').has('.nav-item-toggle').removeClass('is-active');
+      $('.nav-item').each(function() {
+        if ($(this).css('display') === 'none') {
+            $(this).css('display', '');
+        }
+      });
+      return;
+    } 
+    $('#clear_filter').show();
+    let articles = $('.nav-link , .nav-menu .nav-text');
+    articles.parent().hide();
+    articles.each(function() {
+      let article = $(this);
+      let title = article.text().toLowerCase();
+      if (title.includes(input)) {
+        title_match=true;
+        $('.no-results-container').hide();
+        article.parent().show();
+        article.parent().has('.nav-item-toggle').removeClass('is-active');
+        showAncestors(article.parent());
+        showDescendants(article.parent());
+      }
+    });
+    if(!title_match){
+      $('.no-results-container').show();
+    }
+  }
+
+  function showAncestors(item){
+    let parent = item.parents('.nav-item');
+    parent.each(function() {
+      $(this).show();
+      $(this).has('.nav-item-toggle').addClass('is-active');
+    });
+  }
+
+  function showDescendants(item) {
+    let children = item.find('.nav-item');
+    children.each(function() {
+      $(this).show();
+      $(this).has('.nav-item-toggle').removeClass('is-active');
+    });
   }
 
   return {
