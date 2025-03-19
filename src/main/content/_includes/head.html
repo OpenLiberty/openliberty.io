@@ -77,4 +77,29 @@
   {% endif %}
 
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script type="text/javascript">
+    window._ibmAnalytics = {
+        "settings": {
+            "name": "Openliberty-io-website",
+            "isSpa": false,
+            "tealiumProfileName": "ibm-web-app"
+        },
+        // "onLoad": [
+        //     ["ibmStats.pageview", []]
+        // ]
+    };
+    digitalData = {
+        "page": {
+            "pageInfo": {
+                "ibm": {
+                "siteId": "IBM_" + _ibmAnalytics.settings.name,
+                }
+            },
+            "category": {
+                "primaryCategory": "PC100"
+            }
+        }
+    };
+  </script>
+  <script src="//1.www.s81c.com/common/stats/ibm-common.js" type="text/javascript" async="async"></script>
 </head>
