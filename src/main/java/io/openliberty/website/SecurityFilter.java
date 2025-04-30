@@ -71,7 +71,7 @@ public class SecurityFilter implements Filter {
             response.setHeader("X-Content-Type-Options", "nosniff");
              // Mitigating cross site scripting (XSS) from other domains.
             response.setHeader("Content-Security-Policy",
-                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud https://docs.oracle.com/javase/8/docs/api/ https://docs.oracle.com/en/java/javase/17/docs/api/");
+                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud https://docs.oracle.com/javase/8/docs/api/ https://docs.oracle.com/en/java/javase/17/docs/api/ http://*.tealium.com https://*.tags.tiqcdn.com http://*.tags.tiqcdn.com http://*.trustarc.com https://*.trustarc.com https://*.prefmgr-cookie.truste-svc.net http://*.prefmgr-cookie.truste-svc.net https://www.ibm.com https://1.www.s81c.com/ https://www-api.ibm.com https://tags.tiqcdn.com");
 
             // Limits the information sent cross-domain and does not send the origin name.
             response.setHeader("Referrer-Policy", "no-referrer");

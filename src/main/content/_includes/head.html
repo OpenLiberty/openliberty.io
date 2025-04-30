@@ -56,10 +56,6 @@
     {% css {{css_name}} %}
   {% endfor %}
 
-  {% if jekyll.environment == 'production' and site.google_tag_manager %}
-    {% include google_tag_manager_head.html %}
-  {% endif %}
-
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">  
 
@@ -77,4 +73,26 @@
   {% endif %}
 
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script type="text/javascript">
+    window._ibmAnalytics = {
+        "settings": {
+            "name": "Openliberty-io-website",
+            "tealiumProfileName": "ibm-web-app"
+        },
+        "digitalData.page.services.google.enabled": true
+    };
+    digitalData = {
+        "page": {
+            "pageInfo": {
+                "ibm": {
+                "siteId": "IBM_" + _ibmAnalytics.settings.name,
+                }
+            },
+            "category": {
+                "primaryCategory": "PC100"
+            }
+        }
+    };
+  </script>
+  <script src="//1.www.s81c.com/common/stats/ibm-common.js" type="text/javascript" async="async"></script>
 </head>
