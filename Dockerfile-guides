@@ -1,24 +1,16 @@
-# Created by laura_cowen@uk.ibm.com, Twitter/GitHub/Docker username: @lauracowen
-# 2017-11-02
-# Updated Oct. 2018 by Kin Ueng
-# Updated May  2024 by Mark Swatosh
 # Installing and running Jekyll based on: based on https://blog.codeship.com/a-beginners-guide-to-the-dockerfile/
 # NodeJS and NPM sections based on: https://gist.github.com/remarkablemark/aacf14c29b3f01d6900d13137b21db3a
 
-# The purpose of this dockerfile is to run your Jekyll website so you don't have to install Jekyll 
-# and all of Jekyll's pre-requisite software.
-# You can view the site in a browser on your local (host) machine (at http://0.0.0.0:4000).
-# You can then modify website source files on your local (host) machine.
-# When you save a changed file, the changes are automatically rebuilt by Jekyll in the container and you can almost immediately
-# see the changes when you refresh your browser.
-
 # To build this image, from the directory that contains this Dockerfile:
-# docker build --tag lauracowen/jekyll .
+# docker build -f Dockerfile-guides --tag olio/guides .
 #
 # To run a container:
-# docker run --name jekyll -it -d -p 4000:4000 -v <root directory of openliberty.io git repository on host machine>:/home/jekyll lauracowen/jekyll
+# docker run --name guides -it -d -p 4000:4000 -v <root directory of a guide git repository on host machine>:/home/jekyll/src/main/content/guides/guide-new olio/guides
+#
 
-# Use the official Ruby image as a parent image
+# The guide will be available at http://localhost:4000/guides/{project-id}.html
+# project-id is specified in the guide's README.adoc
+#
 FROM ruby:2.7.6
 
 # INSTALL NODEJS AND NPM (it's a dependency of something in the Jekyll setup)
@@ -62,26 +54,31 @@ RUN mkdir -p /home/jekyll \
     && useradd -rg jekyll -u 1000 -d /home/jekyll jekyll \
     && chown jekyll:jekyll /home/jekyll
 
-# Create a mount point where Docker can access the source files on my local system (host system)
-VOLUME /home/jekyll
-
 #  Set the working directory
 WORKDIR /home/jekyll
 
-# openliberty.io gem dependencies
+#Copy files
+COPY ./src /home/jekyll/src
 COPY ./scripts /home/jekyll/scripts
+COPY ./gems /home/jekyll/gems
+
+# openliberty.io gem dependencies
 RUN scripts/build/gem_dependencies.sh
 
 # openliberty.io custom gems
-COPY ./gems /home/jekyll/gems    
 RUN pushd gems/ol-target-blank \
     && gem build ol-target-blank.gemspec \
     && gem install ol-target-blank-0.0.1.gem \
     && popd
 
+# Create a mount point where Docker can access a guide on the local system
+RUN mkdir -p /home/jekyll/src/main/content/guides/guide-new
+RUN git clone https://github.com/OpenLiberty/guides-common.git /home/jekyll/src/main/content/guides/guides-common
+VOLUME /home/jekyll/src/main/content/guides/guide-new
+
 # Serve the site
-ENTRYPOINT ["bash", "./scripts/jekyll_serve_dev.sh"]
+# scripts/jekyll_serve_dev.sh with --force-polling because file change notifications don't work over docker volumes
+ENTRYPOINT jekyll s --host 0.0.0.0 --force-polling --future --source src/main/content --config src/main/content/_config.yml,src/main/content/_dev_config.yml --drafts
 
 # Make port 4000 available to the world outside this container
 EXPOSE 4000
-
