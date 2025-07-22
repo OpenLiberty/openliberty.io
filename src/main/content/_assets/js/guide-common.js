@@ -299,7 +299,6 @@ function createEndOfGuideContent() {
         .siblings()
         .find("p")
         .clone();
-    whatYouLearned.first().prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
     whatYouLearned.attr("tabindex", "-1");
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
