@@ -53,21 +53,19 @@ jobs:
               body: 'Rebase not required. You are good to merge the branch.'
             })
             
-      - name: Exit workflow if rebase is not required
-        if: steps.behind_check.outputs.needs_rebase == 'false'
-        run: exit 0
-            
       - name: Attempt rebase onto target branch
+        if: steps.behind_check.outputs.needs_rebase == 'true'
         run: |
           git rebase origin/${{ github.base_ref }}
-
+          
       - name: Check for rebase conflicts
+        if: steps.behind_check.outputs.needs_rebase == 'true'
         run: |
           if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ]; then
             echo "Rebase conflicts detected. Please rebase manually."
             exit 1
           fi
-
-      - name: Push rebased branch (optional)
-        if: success()
+          
+      - name: Push rebased branch 
+        if: success() && steps.behind_check.outputs.needs_rebase == 'true'
         run: git push --force-with-lease origin HEAD:${{ github.head_ref }}
