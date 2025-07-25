@@ -3,9 +3,11 @@ name: Run Prohibited terms PR checker
 on:
   pull_request:
     branches:
-      - draft
-      - staging
       - prod
+  workflow_run:
+    workflows: ["Rebase Check"]  
+    types:
+      - completed    
 
 jobs:
   check-files:
@@ -20,12 +22,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: tools/
-          repository: openliberty/guides-common
-      - name: Set up PAT authentication
-        env:
-          PAT: ${{ secrets.Rebase_PAT }}
-        run: |
-          git remote set-url origin https://${PAT}@github.com/${{ github.repository }}.git       
+          repository: openliberty/guides-common  
       - id: Checker
         shell: bash
         run: bash ./tools/pr-checker/checker.sh ${{ github.repository }} ${{ github.event.pull_request.number }} | tee checker.log
