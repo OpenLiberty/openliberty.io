@@ -14,11 +14,6 @@ jobs:
     outputs:
       canSkip: ${{ steps.Checker.outputs.canSkip }}
     steps:
-      - name: Set up PAT authentication
-        env:
-          PAT: ${{ secrets.Rebase_PAT }}
-        run: |
-          git remote set-url origin https://${PAT}@github.com/${{ github.repository }}.git   
       - name: Get files
         uses: actions/checkout@v2
       - name: Get tools
@@ -26,6 +21,11 @@ jobs:
         with:
           path: tools/
           repository: openliberty/guides-common
+      - name: Set up PAT authentication
+        env:
+          PAT: ${{ secrets.Rebase_PAT }}
+        run: |
+          git remote set-url origin https://${PAT}@github.com/${{ github.repository }}.git       
       - id: Checker
         shell: bash
         run: bash ./tools/pr-checker/checker.sh ${{ github.repository }} ${{ github.event.pull_request.number }} | tee checker.log
