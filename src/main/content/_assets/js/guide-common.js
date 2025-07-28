@@ -307,16 +307,6 @@ function createEndOfGuideContent() {
     )
         .parent()
         .remove(); // Remove from TOC.
-    // Concatenate the guide title and guide attribution license and append it to the end of guide.
-    var guideAttributionText = $("#guide-attribution")
-        .siblings()
-        .find("p")
-        .html();
-    if (guideAttributionText) {
-        $("#guide_attribution").html(guideAttributionText);
-        $("#guide-attribution").parent().remove();
-        $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
-    }
 
     var relatedLinks = $("#related-links").siblings().find("p").clone();
     rightSide.append(relatedLinks);
