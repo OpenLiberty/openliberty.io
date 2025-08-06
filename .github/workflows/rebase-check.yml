@@ -1,0 +1,29 @@
+name: Rebase Check
+
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - staging
+      - draft
+
+jobs:
+  rebase-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
+          
+      - name: Post '..' comparison link to verify changes are identical to normal comparison
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const compareUrl = `https://github.com/OpenLiberty/openliberty.io/compare/${{ github.base_ref }}..${{ github.head_ref }}`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: 'openliberty.io',
+              issue_number: context.payload.pull_request.number,
+              body: `**Compare your changes here:** \n ${compareUrl} \n Ensure the changes are identical to the desired changes. If not, please resolve merge conflicts (if any) and rebase '${{ github.head_ref }}' onto '${{ github.base_ref }}'`
+            });
