@@ -1,4 +1,4 @@
-FROM icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.66 as jekyll
+FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.79 as jekyll
 SHELL ["/bin/bash", "-c"]
 
 COPY gems /gems
@@ -10,6 +10,9 @@ COPY scripts /scripts
 RUN apt-get update && \
     apt-get -y install curl git python3 python3-bs4 python3-lxml \
     libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
+
+RUN apt-get -qq update && \
+    apt-get install -y software-properties-common
 
 # Upgrade the git manually to mitigate risk from CVE-2022-41903, CVE-2022-23521, CVE-2022-41953
 RUN add-apt-repository -y ppa:git-core/ppa && \
