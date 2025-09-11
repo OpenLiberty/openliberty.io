@@ -217,7 +217,6 @@ function render_builds(builds, parent) {
         // get the newest release version
         // used to only add builds from the last two years to the runtime release table
         versArr = JSON.parse(JSON.stringify(builds));
-        console.log("VERSARR",versArr);
         sort_builds(versArr, "version", true);
         newest = parseInt(versArr[0].version.split(".")[0]);
         subRelease = parseInt(versArr[0].version.split(".")[3]);
@@ -1388,7 +1387,6 @@ $(document).ready(function () {
     $.ajax({
         url: builds_url,
     }).done(function (data) {
-        console.log("DATA: ",data);
         failed_builds_request = false;
         if (data.latest_releases) {
             latest_releases = data.latest_releases;
@@ -1423,7 +1421,6 @@ $(document).ready(function () {
         }
 
         if (data.builds) {
-            Cconsole.log("DATA BUILDS: ",data.builds)
             if (data.builds.runtime_releases) {
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
