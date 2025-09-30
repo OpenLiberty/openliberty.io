@@ -95,8 +95,8 @@ public class OpenLibertyEndpoint extends Application {
         return githubManager.getIssues();
     }
 
-    String mavenUrl="https://search.maven.org/solrsearch/select?q=g:io.openliberty.tools+AND+a:liberty-maven-plugin&core=gav&rows=20&wt=json";
-    String gradleUrl="https://search.maven.org/solrsearch/select?q=g:io.openliberty.tools+AND+a:liberty-gradle-plugin&core=gav&rows=20&wt=json";
+    String mavenUrl="https://central.sonatype.com/solrsearch/select?q=g:io.openliberty.tools+AND+a:liberty-maven-plugin&core=gav&rows=20&wt=json&sort=v+desc";
+    String gradleUrl="https://central.sonatype.com/solrsearch/select?q=g:io.openliberty.tools+AND+a:liberty-gradle-plugin&core=gav&rows=20&wt=json&sort=v+desc";
     @GET
     @Produces({ "application/json" })
     @Path("start/plugin-versions")
