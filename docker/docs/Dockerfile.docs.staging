@@ -54,7 +54,7 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:25.0.0.9-kernel-slim-java8-openj9-ubi as runtime
+FROM icr.io/appcafe/open-liberty:25.0.0.9-kernel-slim-java8-ibmjava-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 
 COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
@@ -62,7 +62,7 @@ COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 # This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose 
 # using featureUtility. 
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
-RUN features.sh
+RUN bash features.sh
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
