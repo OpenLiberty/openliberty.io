@@ -1,4 +1,4 @@
-import {samples} from "../docs_samples/ol_spi_samples";
+import {samples} from "../../docs_samples/ol_spi_samples";
 describe('Openliberty SPI Accesibility Tests', () => {
     samples.forEach((sample)=>{
         it(`Testing ${sample.section}`,()=>{
