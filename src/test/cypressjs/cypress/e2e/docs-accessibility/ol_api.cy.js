@@ -1,4 +1,4 @@
-import {samples} from "../docs_samples/ol_api_samples";
+import {samples} from "../../docs_samples/ol_api_samples";
 describe('Openliberty API Accesibility Tests', () => {
     samples.forEach((sample)=>{
         it(`Testing ${sample.section}`,()=>{
