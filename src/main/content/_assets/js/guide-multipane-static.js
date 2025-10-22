@@ -436,11 +436,17 @@ function parse_tags(code_block) {
     var start_tags = code_block.find("span:contains(tag::)");
     var end_tags = code_block.find("span:contains(end::)");
 
+    function sanitizeTagName(tag_name) {
+        // Keep letters, numbers, hyphens, commas, and spaces only
+        return tag_name.replace(/[^a-zA-Z0-9\-, ]/g, '');
+    }
+
     start_tags.each(function () {
         var text = $(this).text();
         var start_index = text.indexOf("tag::") + 5;
         var end_index = text.indexOf("[]");
         var tag_name = text.substring(start_index, end_index);
+             tag_name = sanitizeTagName(tag_name);
         var end = $(this)
             .nextAll("span:contains('end::" + tag_name + "[]')")
             .first();
