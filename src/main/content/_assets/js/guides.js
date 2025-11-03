@@ -669,7 +669,7 @@ $(document).ready(function () {
             $("#toc_column > #toc_container > ul").append(
               '<li><a href="#' +
                 subcategoryId +
-                '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' +
+                '" rel="noreferrer"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' +
                 subcategory.subcategory_name +
                 "</a></li>"
             );

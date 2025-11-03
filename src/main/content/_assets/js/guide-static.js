@@ -26,7 +26,7 @@ $(document).ready(function () {
                     '"' +
                     prereq.link +
                     '"' +
-                    ' class="prereq notranslate" target="_blank">' +
+                    ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' +
                     prereq.name +
                     "</a></div>";
             }
@@ -97,7 +97,7 @@ $(document).ready(function () {
             ) {
                 $(".skills_network_description").text(data.buttonLabel);
                 var skills_network_button = $(
-                    '<a class="skills_network_button" target="_blank" rel="noopener"></a>'
+                    '<a class="skills_network_button" target="_blank" rel="noopener noreferrer"></a>'
                 );
                 skills_network_button.attr("href", skills_network_url);
                 skills_network_button.attr("title", data.tooltipText);
