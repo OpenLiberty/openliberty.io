@@ -29,5 +29,16 @@ css:
       document.querySelectorAll('pre[tabindex="0"]').forEach(el => el.removeAttribute('tabindex'));
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Select all tables inside Asciidoctor-generated admonitions or colists
+      const tables = document.querySelectorAll('.admonitionblock table, .colist table');
+      tables.forEach(table => {
+        if (!table.hasAttribute('role')) {
+          table.setAttribute('role', 'none');
+        }
+      });
+    });
+    </script>
 
 </html>
