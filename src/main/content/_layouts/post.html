@@ -23,7 +23,7 @@ js: post
                 <a id="blog_link" href="{{baseURL}}/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">{% t blog.see_all_blog_posts %}</a>
                 <div class="share_post_container">
                     {% assign page_title = page.title | replace: "'" , "\\\\'" %}
-                    <a class="reddit_link" href="https://www.reddit.com/submit" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+                    <a class="reddit_link" href="https://www.reddit.com/submit" rel="noreferrer" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
                 </div>
                 <h1 id="post_title">{{ page.title | escape }}</h1>
                 <div id="post_information_container">
@@ -47,7 +47,7 @@ js: post
                         {% endfor %}
                     </div>
                     {% if page.author_github %}
-                        <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
+                        <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener noreferrer">{{ page.author }}</a>
                     {% else %}
                         <span class="author_name">{{ page.author }}</span>  
                     {% endif %}           
@@ -63,7 +63,7 @@ js: post
                         {% endif %}
                         {% assign current = current | plus: 1 %}
                         {% if author.github %}
-                        	<a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                        	<a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener noreferrer">{{ author.name }}</a>
                         {% else %}
                         	<span class="author_name">{{ author.name }}</span>
                         {% endif %}
@@ -101,7 +101,7 @@ js: post
             {{ content }}
             <div class="share_post_container">
                 {% assign page_title = page.title | replace: "'" , "\\\\'" %}
-                <a class="reddit_link" href="https://www.reddit.com/submit" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+                <a class="reddit_link" href="https://www.reddit.com/submit" rel="noreferrer" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
             </div>
             <div id="blog_link_container">
                 <a id="blog_link_bottom" href="{{baseURL}}/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">{% t blog.see_all_blog_posts %}</a>

@@ -78,7 +78,7 @@ $(window).on("load", function() {
       matches.sort(orderVersions);
       matches.forEach(function(m) {
         $(".doc .paragraph ul").append(
-          "<li><a href=" +
+          "<li><a rel='noreferrer' href=" +
             window.location.origin +
             "/docs/" +
             m +
