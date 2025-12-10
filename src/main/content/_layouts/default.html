@@ -23,5 +23,20 @@ css:
     {% include javascript.html %}
 
   </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('pre[tabindex="0"]').forEach(el => el.removeAttribute('tabindex'));
+    });
+  </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const tables = document.querySelectorAll('.admonitionblock table, .colist table');
+        tables.forEach(table => {
+          if (!table.hasAttribute('role')) {
+            table.setAttribute('role', 'none');
+          }
+        });
+      });
+      </script>
 
 </html>
