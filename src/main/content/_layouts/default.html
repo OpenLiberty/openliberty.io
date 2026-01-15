@@ -25,15 +25,35 @@ css:
   </body>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+
       document.querySelectorAll('pre[tabindex="0"]').forEach(el => el.removeAttribute('tabindex'));
+      
+      // Fix IBM consent banner role - it's injected by ibm-common.js with role="banner"
+      // Use MutationObserver to catch it when it's added to the DOM
+      const observer = new MutationObserver((mutations) => {
+        const consentBar = document.getElementById('consent_blackbar');
+        if (consentBar && consentBar.getAttribute('role') === 'banner') {
+          consentBar.setAttribute('role', 'complementary');
+          consentBar.setAttribute('aria-label', 'Cookie consent');
+          observer.disconnect(); // Stop observing once fixed
+        }
+      });
+      
+      // Start observing the document body for added nodes
+      observer.observe(document.body, { childList: true, subtree: true });
+      
     });
   </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const tables = document.querySelectorAll('.admonitionblock table, .colist table');
-        tables.forEach(table => {
+        // Fix accessibility for ALL tables without headers
+        const allTables = document.querySelectorAll('table');
+        allTables.forEach(table => {
           if (!table.hasAttribute('role')) {
-            table.setAttribute('role', 'none');
+            const hasHeaders = table.querySelector('th');
+            if (!hasHeaders) {
+              table.setAttribute('role', 'presentation');
+            }
           }
         });
       });
