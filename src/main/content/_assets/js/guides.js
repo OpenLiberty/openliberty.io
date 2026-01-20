@@ -1046,9 +1046,15 @@ $(document).ready(function () {
     showAllCategories();
   });
 
-  // Click buttons to fill search bar
+ // Click buttons to fill search bar
   $("#guides_search_container").on("click focus", ".tag_button", function () {
-    var inputValue = "tag: " + $(this).html();
+    var clickedTag = $(this).html();
+    var inputValue = $("#guide_search_input").val();
+    if (inputValue === "") {
+      inputValue = "tag: " + clickedTag;
+    } else if (!inputValue.includes(clickedTag)) {
+      inputValue += " " + clickedTag;
+    }
     $("#guide_search_input").val(inputValue);
     $(".tag_button").removeClass("hidden");
     $(this).addClass("hidden");
