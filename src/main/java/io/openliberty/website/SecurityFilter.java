@@ -59,6 +59,9 @@ public class SecurityFilter implements Filter {
         } else if ("https".equals(req.getScheme())) {
             // If HTTPS is configured this sets a bunch of security headers
 
+            // Remove X-Powered-By header to prevent information disclosure (OWASP recommendation)
+            response.setHeader("X-Powered-By", "");
+            
             // Tell browsers that this site should only be accessed using HTTPS, instead of using HTTP.
             // IncludeSubDomains and 1 year set per OWASP.
             response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
