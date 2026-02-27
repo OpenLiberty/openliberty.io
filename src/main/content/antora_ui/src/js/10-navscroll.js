@@ -96,6 +96,7 @@ var navScroll = (function() {
 
     // adjust docs toolbar and nav position
     $(".toolbar").css("top", nav_height + "px");
+    $(".doc").css("margin-top", nav_height + "px")
     if (window.outerWidth < 1024) {
       $(".nav-container").css(
         "top",
@@ -136,6 +137,7 @@ var navScroll = (function() {
 
     // adjust docs toolbar and nav position
     $(".toolbar").css("top", "0px");
+    $(".doc").css("margin-top", "0px");
     if (window.outerWidth < 1024) {
       $(".nav-container").css("top", $(".toolbar").outerHeight() + "px");
       $(".nav").css("top", "");
