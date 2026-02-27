@@ -56,11 +56,12 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 #
 FROM icr.io/appcafe/open-liberty:26.0.0.2-kernel-slim-java8-ibmjava-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
+ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
 
 COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 
-# This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose 
-# using featureUtility. 
+# This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
+# using featureUtility.
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
 RUN bash features.sh
 
