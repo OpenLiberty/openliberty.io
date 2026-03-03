@@ -492,6 +492,44 @@ $(document).ready(function () {
         }
     });
 
+    // Track copy to clipboard button clicks using IBM DBDM standard
+    $(document).on('click', '.copy_to_clipboard', function(e) {
+        var $button = $(this);
+        var $section = $button.closest('.sect1, .sect2');
+        var sectionId = $section.find('h2, h3').first().attr('id') || 'unknown';
+        var sectionTitle = $section.find('h2, h3').first().text() || 'Unknown Section';
+        var guideTitle = $('#guide_title').text() || document.title;
+        
+        // Calculate button position in guide
+        var allCopyButtons = $('.copy_to_clipboard');
+        var buttonIndex = allCopyButtons.index($button) + 1;
+        var totalButtons = allCopyButtons.length;
+        var progressPercentage = Math.round((buttonIndex / totalButtons) * 100);
+        
+        // Send PAGE CLICK event using IBM DBDM ibmStats.event() function
+        if (typeof ibmStats !== 'undefined' && typeof ibmStats.event === 'function') {
+            var eventInfo = {
+                type: "pageclick",
+                primaryCategory: "PAGE CLICK",
+                eventName: "Copy Code Block",
+                eventCategoryGroup: "Guide Interaction",
+                executionPath: guideTitle + " > " + sectionTitle,
+                targetTitle: "Copy code button " + buttonIndex + " of " + totalButtons,
+                targetClass: "copy_to_clipboard",
+                targetID: sectionId,
+                attribute1: guideTitle,
+                attribute2: sectionId,
+                attribute3: sectionTitle,
+                attribute4: buttonIndex.toString(),
+                attribute5: totalButtons.toString(),
+                attribute6: progressPercentage + "%",
+                attribute7: window.location.pathname,
+                attribute8: "code-copy-interaction"
+            };
+            ibmStats.event(eventInfo);
+        }
+    });
+
     $(window).on("scroll", function () {
         //handles where the top of the code column should be
         var notif_height = 0;

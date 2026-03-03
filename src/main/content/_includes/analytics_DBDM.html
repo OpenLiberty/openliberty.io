@@ -1,5 +1,18 @@
 <!-- Digital Behavior Data Management in IBM -->
 <script type="text/javascript">
+    // Enable scroll tracker in active mode for guide pages only
+    if (document.querySelector('#guide_column')) {
+        window._ibmAnalytics = {
+            scrollTracker: {
+                enabled: true,
+                mode: "active",
+                threshold: 25,
+                units: "percent"
+            }
+        };
+    }
+</script>
+<script type="text/javascript">
     window.digitalData = {
         page: {
             category: {
