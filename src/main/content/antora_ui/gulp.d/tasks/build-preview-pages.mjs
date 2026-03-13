@@ -1,15 +1,14 @@
-'use strict'
-
-const asciidoctor = require('asciidoctor.js')()
-const fs = require('fs-extra')
-const handlebars = require('handlebars')
-const { obj: map } = require('through2')
-const merge = require('merge-stream')
-const ospath = require('path')
+import asciidoctorFactory from 'asciidoctor.js'
+const asciidoctor = asciidoctorFactory()
+import fs from 'fs-extra'
+import handlebars from 'handlebars'
+import { obj as map } from 'through2'
+import merge from 'merge-stream'
+import ospath from 'path'
 const path = ospath.posix
-const requireFromString = require('require-from-string')
-const vfs = require('vinyl-fs')
-const yaml = require('js-yaml')
+import requireFromString from 'require-from-string'
+import vfs from 'vinyl-fs'
+import yaml from 'js-yaml'
 
 const ASCIIDOC_ATTRIBUTES = {
   experimental: '',
@@ -18,7 +17,7 @@ const ASCIIDOC_ATTRIBUTES = {
   'source-highlighter': 'highlight.js',
 }
 
-module.exports = (src, previewSrc, previewDest, sink = () => map(), layouts = {}) => () =>
+export default (src, previewSrc, previewDest, sink = () => map(), layouts = {}) => () =>
   Promise.all([
     loadSampleUiModel(previewSrc),
     toPromise(
@@ -66,7 +65,7 @@ module.exports = (src, previewSrc, previewDest, sink = () => map(), layouts = {}
     )
 
 function loadSampleUiModel (src) {
-  return fs.readFile(ospath.join(src, 'ui-model.yml'), 'utf8').then((contents) => yaml.safeLoad(contents))
+  return fs.readFile(ospath.join(src, 'ui-model.yml'), 'utf8').then((contents) => yaml.load(contents))
 }
 
 function registerPartials (src) {

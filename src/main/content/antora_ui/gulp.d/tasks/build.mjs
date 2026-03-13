@@ -1,25 +1,37 @@
-'use strict'
-
-const autoprefixer = require('autoprefixer')
-const browserify = require('browserify')
-const buffer = require('vinyl-buffer')
-const concat = require('gulp-concat')
-const cssnano = require('cssnano')
-const fs = require('fs-extra')
-const imagemin = require('gulp-imagemin')
-const { obj: map } = require('through2')
-const merge = require('merge-stream')
-const ospath = require('path')
+import autoprefixer from 'autoprefixer'
+import browserify from 'browserify'
+import buffer from 'vinyl-buffer'
+import concat from 'gulp-concat'
+import cssnano from 'cssnano'
+import fs from 'fs-extra'
+import { obj as map } from 'through2'
+import merge from 'merge-stream'
+import ospath from 'path'
 const path = ospath.posix
-const postcss = require('gulp-postcss')
-const postcssCalc = require('postcss-calc')
-const postcssImport = require('postcss-import')
-const postcssUrl = require('postcss-url')
-const postcssVar = require('postcss-custom-properties')
-const uglify = require('gulp-uglify')
-const vfs = require('vinyl-fs')
+import postcss from 'gulp-postcss'
+import postcssCalc from 'postcss-calc'
+import postcssImport from 'postcss-import'
+import postcssUrl from 'postcss-url'
+import postcssVar from 'postcss-custom-properties'
+import uglify from 'gulp-uglify'
+import vfs from 'vinyl-fs'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import { createRequire } from 'module'
 
-module.exports = (src, dest, preview) => () => {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const require = createRequire(import.meta.url)
+
+let imageminModule
+async function loadImagemin() {
+  if (!imageminModule) {
+    imageminModule = await import('gulp-imagemin')
+  }
+  return imageminModule
+}
+
+export default (src, dest, preview) => async () => {
   const opts = { base: src, cwd: src }
   const sourcemaps = preview || process.env.SOURCEMAPS === 'true'
   const postcssPlugins = [
@@ -42,6 +54,8 @@ module.exports = (src, dest, preview) => () => {
     autoprefixer,
     preview ? () => {} : cssnano({ preset: 'default' }),
   ]
+
+  const { default: imagemin, gifsicle, mozjpeg, optipng, svgo } = await loadImagemin()
 
   return merge(
     vfs
@@ -75,12 +89,23 @@ module.exports = (src, dest, preview) => () => {
       .pipe(
         imagemin([
           // Do not have gif files
-          // Comment out to mitigate 
+          // Comment out to mitigate
           // https://github.com/OpenLiberty/openliberty.io/security/dependabot/37
-          // imagemin.gifsicle(), 
-          imagemin.jpegtran(),
-          imagemin.optipng(),
-          imagemin.svgo({ plugins: [{ removeViewBox: false }] }),
+          // gifsicle(),
+          mozjpeg(),
+          optipng(),
+          svgo({
+            plugins: [
+              {
+                name: 'preset-default',
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                  },
+                },
+              },
+            ],
+          }),
         ])
       ),
     vfs.src('helpers/*.js', opts),
@@ -88,3 +113,4 @@ module.exports = (src, dest, preview) => () => {
     vfs.src('partials/*.hbs', opts)
   ).pipe(vfs.dest(dest, { sourcemaps: sourcemaps && '.' }))
 }
+
