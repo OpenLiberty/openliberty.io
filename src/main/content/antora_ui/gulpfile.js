@@ -1,12 +1,10 @@
-import { src, dest, parallel, series, watch } from 'gulp'
-import gulpSass from 'gulp-sass'
-import * as dartSass from 'sass'
-const sass = gulpSass(dartSass)
-import gulpConnect from 'gulp-connect'
+'use strict'
 
-import createTask from './gulp.d/lib/create-task.mjs'
-import exportTasks from './gulp.d/lib/export-tasks.mjs'
-import * as task from './gulp.d/tasks/index.mjs'
+const { src, dest, parallel, series, watch } = require('gulp')
+const sass = require('gulp-sass')(require('sass'));
+
+const createTask = require('./gulp.d/lib/create-task')
+const exportTasks = require('./gulp.d/lib/export-tasks')
 
 const bundleName = 'ui'
 const buildDir = 'build'
@@ -14,14 +12,14 @@ const previewSrcDir = 'preview-src'
 const previewDestDir = 'public'
 const srcDir = 'src'
 const destDir = `${previewDestDir}/_`
-
-const livereload = process.env.LIVERELOAD === 'true' ? gulpConnect.reload : undefined
+const { reload: livereload } = process.env.LIVERELOAD === 'true' ? require('gulp-connect') : {}
 const serverConfig = { host: '0.0.0.0', port: 5252, livereload }
 
+const task = require('./gulp.d/tasks')
 const glob = {
   all: [srcDir, previewSrcDir],
   css: `${srcDir}/css/**/*.css`,
-  js: ['gulpfile.mjs', 'gulp.d/**/*.mjs', `${srcDir}/{helpers,js}/**/*.js`],
+  js: ['gulpfile.js', 'gulp.d/**/*.js', `${srcDir}/{helpers,js}/**/*.js`],
 }
 
 const cleanTask = createTask({
@@ -99,10 +97,11 @@ const watchSass = createTask({
   }
 })
 
-const tasks = exportTasks(
+module.exports = exportTasks(
   bundleTask,
   cleanTask,
   buildTask,
+  bundleTask,
   bundlePackTask,
   previewTask,
   previewBuildTask,
@@ -110,16 +109,3 @@ const tasks = exportTasks(
   convertSass,
   watchSass
 )
-
-export const bundle = tasks.bundle
-export const clean = tasks.clean
-export const build = tasks.build
-export const bundlePack = tasks['bundle:pack']
-export const preview = tasks.preview
-export const previewBuild = tasks['preview:build']
-export const pack = tasks.pack
-export const sassConvert = tasks['sass:convert']
-export const sassWatch = tasks['sass:watch']
-export default tasks.default || tasks.bundle
-
-
