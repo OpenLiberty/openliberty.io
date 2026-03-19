@@ -20,6 +20,9 @@ set +e
 source /usr/local/rvm/scripts/rvm || true
 set -e
 
+rvm get stable
+rvm reload
+
 rvm requirements
 rvm install 4.0.2
 rvm use 4.0.2 --default
