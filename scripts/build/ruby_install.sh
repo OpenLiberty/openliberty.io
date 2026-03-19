@@ -21,20 +21,19 @@ source /usr/local/rvm/scripts/rvm || true
 set -e
 
 rvm requirements
-rvm install 2.7.6
-rvm use 2.7.6 --default
+rvm install 4.0.2
+rvm use 4.0.2 --default
 echo "Ruby version:"
 echo `ruby -v`
 
 gem install ffi -v 1.16.3
 gem install public_suffix -v 5.1.1
-gem install jekyll -v 3.8.6
-gem install jekyll-assets -v 2.4.0
+gem install jekyll -v 4.4.1
 gem install jekyll-multiple-languages-plugin
-gem install bundler -v 2.4.22
+gem install bundler -v 4.0.8
 gem install faraday -v 2.8.1
 gem install faraday-net_http -v 3.0.2
-gem install jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
+gem install jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit webrick
 
 timer_end=$(date +%s)
 echo "Total execution time for installing Ruby and required packages/gems: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
