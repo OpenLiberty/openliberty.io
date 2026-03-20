@@ -1,4 +1,6 @@
-export default (...tasks) => {
+'use strict'
+
+module.exports = (...tasks) => {
   const seed = {}
   if (tasks.length) {
     if (tasks.lastIndexOf(tasks[0]) > 0) {

@@ -1,10 +1,12 @@
-import connect from 'gulp-connect'
-import os from 'os'
+'use strict'
+
+const connect = require('gulp-connect')
+const os = require('os')
 
 const ANY_HOST = '0.0.0.0'
 const URL_RX = /(https?):\/\/(?:[^/: ]+)(:\d+)?/
 
-export default (root, opts = {}, watch = undefined) => (done) => {
+module.exports = (root, opts = {}, watch = undefined) => (done) => {
   connect.server({ ...opts, middleware: opts.host === ANY_HOST ? decorateLog : undefined, root }, function () {
     this.server.on('close', done)
     if (watch) watch()
