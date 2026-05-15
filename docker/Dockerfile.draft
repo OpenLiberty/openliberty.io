@@ -49,15 +49,16 @@ COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
 
-# Pre-download Maven distribution using curl with authentication
+# Pre-download Maven distribution and wrapper JAR using curl with authentication
 # This bypasses the Maven wrapper's Java HTTP client authentication issues
 # Use $HOME instead of /root since this image runs as non-root user (UID 1001)
+# Download wrapper JAR to temp location first, then copy to /.mvn/wrapper/ (which was copied as root)
 RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote/org/apache/maven/apache-maven/3.6.3/apache-maven-3.6.3-bin.zip" && \
     MAVEN_WRAPPER_JAR="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote/io/takari/maven-wrapper/0.5.6/maven-wrapper-0.5.6.jar" && \
     mkdir -p $HOME/.m2/wrapper/dists/apache-maven-3.6.3-bin && \
     curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o $HOME/.m2/wrapper/dists/apache-maven-3.6.3-bin/apache-maven-3.6.3-bin.zip "${MAVEN_DIST_URL}" && \
-    mkdir -p /.mvn/wrapper && \
-    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}"
+    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o $HOME/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}" && \
+    cp $HOME/maven-wrapper.jar /.mvn/wrapper/maven-wrapper.jar
 
 # Use Maven settings.xml to configure JFrog Artifactory mirror
 # Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
