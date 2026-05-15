@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  
+  <!-- 
+    TODO: Replace placeholder values with your actual IBM TaaS JFrog Artifactory details
+    - YOUR-ARTIFACTORY-URL.com: e.g., na.artifactory.swg-devops.com
+    - wasliberty-maven-remote: e.g., maven-central-remote or libs-release
+  -->
+  
+  <mirrors>
+    <mirror>
+      <id>ibm-artifactory</id>
+      <name>IBM Artifactory Maven Central Mirror</name>
+      <url>https://https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote.com/artifactory/wasliberty-maven-remote</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+  </mirrors>
+
+  <servers>
+    <server>
+      <id>ibm-artifactory</id>
+      <!-- Authentication using environment variables -->
+      <!-- Set ARTIFACTORY_USER and ARTIFACTORY_TOKEN in your CI/CD pipeline -->
+      <username>${env.ARTIFACTORY_USER}</username>
+      <password>${env.ARTIFACTORY_TOKEN}</password>
+    </server>
+  </servers>
+  
+  <!-- Repository configuration (moved from pom.xml for centralized configuration) -->
+  <profiles>
+    <profile>
+      <id>artifactory</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>ibm-artifactory</id>
+          <name>IBM Artifactory Maven Central Mirror</name>
+          <url>https://https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote.com/artifactory/wasliberty-maven-remote</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>ibm-artifactory</id>
+          <name>IBM Artifactory Maven Central Mirror</name>
+          <url>https://https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote.com/artifactory/wasliberty-maven-remote</url>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  
+</settings>

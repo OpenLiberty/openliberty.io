@@ -35,12 +35,22 @@ RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh && \
 #
 FROM icr.io/appcafe/open-liberty-devfile-stack:22.0.0.1 as war
 
+# Receive JFrog Artifactory credentials as build arguments
+ARG ARTIFACTORY_USER
+ARG ARTIFACTORY_TOKEN
+
+# Convert to environment variables so Maven can access them
+ENV ARTIFACTORY_USER=${ARTIFACTORY_USER}
+ENV ARTIFACTORY_TOKEN=${ARTIFACTORY_TOKEN}
+
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
-RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
+# Use Maven settings.xml to configure JFrog Artifactory mirror
+# Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
 
 #
 #
