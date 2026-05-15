@@ -48,9 +48,20 @@ COPY .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
+
+# Create .netrc file for Maven wrapper authentication to JFrog
+# The Maven wrapper uses Java's HttpURLConnection which respects .netrc
+RUN echo "machine na.artifactory.swg-devops.com" > ~/.netrc && \
+    echo "login ${ARTIFACTORY_USER}" >> ~/.netrc && \
+    echo "password ${ARTIFACTORY_TOKEN}" >> ~/.netrc && \
+    chmod 600 ~/.netrc
+
 # Use Maven settings.xml to configure JFrog Artifactory mirror
 # Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
+
+# Clean up .netrc for security
+RUN rm -f ~/.netrc
 
 #
 #
