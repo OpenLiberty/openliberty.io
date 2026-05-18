@@ -54,6 +54,10 @@ RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/waslib
     echo "Downloading Maven distribution..." && \
     mkdir -p $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin && \
     curl -v -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin/apache-maven-3.9.0-bin.zip "${MAVEN_DIST_URL}" && \
+    echo "Extracting Maven distribution..." && \
+    cd $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin && \
+    unzip -q apache-maven-3.9.0-bin.zip && \
+    echo "Maven distribution extracted successfully" && \
     echo "Downloading Maven wrapper JAR (3.2.0)..." && \
     curl -v -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}" && \
     echo "Downloads completed successfully"
