@@ -45,21 +45,17 @@ COPY --from=jekyll --chown=1001:0 /target /target
 
 # Pre-download Maven distribution and wrapper JAR using curl with authentication
 # This bypasses the Maven wrapper's Java HTTP client authentication issues
-# Use $HOME instead of /root since this image runs as non-root user (UID 1001)
-# Now that /.mvn is owned by user 1001, we can write directly to it
+# The Maven distribution is downloaded to /tmp/ and referenced via file:// URL in maven-wrapper.properties
+# The Maven Wrapper will extract it automatically when it runs
 # Using Maven Wrapper 3.2.0 for better Java 8+ compatibility and improved SSL/TLS support
 RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote-cache/org/apache/maven/apache-maven/3.9.0/apache-maven-3.9.0-bin.zip" && \
     MAVEN_WRAPPER_JAR="https://na.artifactory.swg-devops.com/artifactory/wasliberty-maven-remote/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar" && \
     echo "Java version in container:" && java -version && \
-    echo "Downloading Maven distribution..." && \
-    mkdir -p $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin && \
-    curl -v -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin/apache-maven-3.9.0-bin.zip "${MAVEN_DIST_URL}" && \
-    echo "Extracting Maven distribution..." && \
-    cd $HOME/.m2/wrapper/dists/apache-maven-3.9.0-bin && \
-    unzip -q apache-maven-3.9.0-bin.zip && \
-    echo "Maven distribution extracted successfully" && \
+    echo "Downloading Maven distribution to /tmp/..." && \
+    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /tmp/apache-maven-3.9.0-bin.zip "${MAVEN_DIST_URL}" && \
+    echo "Maven distribution downloaded successfully" && \
     echo "Downloading Maven wrapper JAR (3.2.0)..." && \
-    curl -v -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}" && \
+    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}" && \
     echo "Downloads completed successfully"
 
 # Use Maven settings.xml to configure JFrog Artifactory mirror
