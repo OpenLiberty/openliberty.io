@@ -53,8 +53,8 @@ COPY --from=docs --chown=1001:0 /target /target
 # This bypasses the Maven wrapper's Java HTTP client authentication issues
 # Use $HOME instead of /root since this image runs as non-root user (UID 1001)
 # Now that /.mvn is owned by user 1001, we can write directly to it
-RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote/org/apache/maven/apache-maven/3.6.3/apache-maven-3.6.3-bin.zip" && \
-    MAVEN_WRAPPER_JAR="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote/io/takari/maven-wrapper/0.5.6/maven-wrapper-0.5.6.jar" && \
+RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote-cache/org/apache/maven/apache-maven/3.9.0/apache-maven-3.9.0-bin.zip" && \
+    MAVEN_WRAPPER_JAR="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote-cache/io/takari/m2e/workspace/org.eclipse.m2e.workspace.cli/0.4.0/org.eclipse.m2e.workspace.cli-0.4.0.jar" && \
     mkdir -p $HOME/.m2/wrapper/dists/apache-maven-3.6.3-bin && \
     curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o $HOME/.m2/wrapper/dists/apache-maven-3.6.3-bin/apache-maven-3.6.3-bin.zip "${MAVEN_DIST_URL}" && \
     curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}"
