@@ -354,6 +354,7 @@ function render_builds(builds, parent) {
                             10
                         );
                         if (package_name.indexOf('jakartaee11') > -1) {
+                            // 26.0.0.5 and higher should have EE11 instead of EE10
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
