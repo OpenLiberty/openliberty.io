@@ -54,6 +54,7 @@ var allowed_builds = {
     //     }
     // }
     runtime_releases: [
+        'jakartaee11.zip',
         'jakartaee10.zip',
         'jakartaee9.zip',
         'javaee8.zip',
@@ -64,6 +65,7 @@ var allowed_builds = {
         'microProfile4.zip',
         'microProfile3.zip',
         'openliberty.zip',
+        'webProfile11.zip',
         'webProfile10.zip',
         'webProfile9.zip',
         'webProfile8.zip'
@@ -351,7 +353,14 @@ function render_builds(builds, parent) {
                             ),
                             10
                         );
-                        if (package_name.indexOf('jakartaee10') > -1) {
+                        if (package_name.indexOf('jakartaee11') > -1) {
+                            // 26.0.0.5 and higher should have EE11 instead of EE10
+                            package_column =
+                                    '<td headers=\'' +
+                                    tableID +
+                                    '_package\'>Jakarta EE 11 <img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 7"/> '+
+                                    '<p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 7.</p></td>';
+                        } else if (package_name.indexOf('jakartaee10') > -1) {
                             // 23.0.0.3 and higher should have EE10 instead of EE9
                             package_column =
                                     '<td headers=\'' +
@@ -383,6 +392,11 @@ function render_builds(builds, parent) {
                                     tableID +
                                     '_package\'>Java EE 8</td>';
                             }
+                        } else if (package_name.indexOf('webprofile11') > -1) {
+                            package_column =
+                                '<td headers=\'' +
+                                tableID +
+                                '_package\'>Web Profile 11</td>';
                         } else if (package_name.indexOf('webprofile10') > -1) {
                             package_column =
                                 '<td headers=\'' +
@@ -760,8 +774,10 @@ function sortBetaLocations(package_locations_param) {
     // this array is used to order the different applications available for each runtime version
     // priority should list newest to oldest platforms, ending with kernel and GA
     app_priority_array = [
+      "jakartaee11",
       "jakartaee10",
       "jakartaee9",
+      "webProfile11",
       "webProfile10",
       "webProfile9",
       "microProfile7",
