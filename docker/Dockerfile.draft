@@ -35,12 +35,34 @@ RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh && \
 #
 FROM icr.io/appcafe/open-liberty-devfile-stack:22.0.0.1 as war
 
+# Receive JFrog Artifactory credentials as build arguments
+ARG ARTIFACTORY_USER
+ARG ARTIFACTORY_TOKEN
+
+# Convert to environment variables so Maven can access them
+ENV ARTIFACTORY_USER=${ARTIFACTORY_USER}
+ENV ARTIFACTORY_TOKEN=${ARTIFACTORY_TOKEN}
+
 COPY mvnw /
-COPY .mvn /.mvn
+COPY --chown=1001:0 .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
-RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
+
+# Pre-download Maven distribution and wrapper JAR using curl with authentication
+# This bypasses the Maven wrapper's Java HTTP client authentication issues
+# Maven Wrapper will extract the zip from /tmp/ when it finds the file:// URL
+# Using Maven Wrapper 3.2.0 for better Java 8+ compatibility and improved SSL/TLS support
+RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/wasliberty-maven-remote-cache/org/apache/maven/apache-maven/3.9.0/apache-maven-3.9.0-bin.zip" && \
+    MAVEN_WRAPPER_JAR="https://na.artifactory.swg-devops.com/artifactory/wasliberty-maven-remote/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar" && \
+    echo "Downloading Maven distribution to /tmp/..." && \
+    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /tmp/apache-maven-3.9.0-bin.zip "${MAVEN_DIST_URL}" && \
+    echo "Maven distribution downloaded successfully" && \
+    curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}"
+
+# Use Maven settings.xml to configure JFrog Artifactory mirror
+# Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
 
 #
 #
