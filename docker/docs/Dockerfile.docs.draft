@@ -6,25 +6,22 @@ SHELL ["/bin/bash", "-c"]
 
 COPY gems /gems
 COPY robots.txt /
-
 COPY src /src
 COPY scripts /scripts
 
+# Upgrade the git manually to mitigate risk from CVE-2022-41903, CVE-2022-23521, CVE-2022-41953
 RUN apt-get update && \
     apt-get -y install curl git python3 python3-bs4 python3-lxml \
-    libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
-
-# Upgrade the git manually to mitigate risk from CVE-2022-41903, CVE-2022-23521, CVE-2022-41953
-RUN add-apt-repository -y ppa:git-core/ppa && \
+    libgdbm-dev libncurses5-dev automake libtool bison libffi-dev && \
+    add-apt-repository -y ppa:git-core/ppa && \
     apt-get update && \
     apt-get install git -y && \
     git --version
 
-ENV BUILD_SCRIPTS_DIR /scripts/build
-
-ENV JAVADOC_DRAFT_SITE=true
-ENV DOCS_DRAFT_SITE=true
-ENV NOT_PROD_SITE=true
+ENV BUILD_SCRIPTS_DIR=/scripts/build \
+    JAVADOC_DRAFT_SITE=true \
+    DOCS_DRAFT_SITE=true \
+    NOT_PROD_SITE=true
 
 RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 
@@ -33,11 +30,9 @@ RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 #
 FROM jekyll as docs
 
-RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
-
-RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
-
-RUN $BUILD_SCRIPTS_DIR/gzip.sh
+RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh && \
+    $BUILD_SCRIPTS_DIR/docs_part_2.sh && \
+    $BUILD_SCRIPTS_DIR/gzip.sh
 
 #
 #
