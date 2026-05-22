@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2023 IBM Corporation and others.
+ * Copyright (c) 2017, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -917,6 +917,8 @@ function validate_application_name() {
 
 // Force mp 6.0 and EE 10 to use at least java 11
 function validate_java_eeAndmp_levels() {
+    var invalidCombination = false;
+    var newJavaVersion = '';
     mpVersion = $(
         '.starter_field[data-starter-field=\'m\'] select'
     )
@@ -927,7 +929,18 @@ function validate_java_eeAndmp_levels() {
     )
     .find(':selected')
     .text(); 
-    if ((mpVersion === '6.0') || (eeVersion == '10.0') || (mpVersion === "6.1") || (mpVersion === "7.0")) {
+    if (eeVersion === '11.0') {
+        javaVersion = $(
+            '.starter_field[data-starter-field=\'j\'] select'
+        )
+        .find(':selected')
+        .text();
+
+        if ((javaVersion === '8') || (javaVersion === '11')) {
+            invalidCombination = true;
+            newJavaVersion = '17';
+        }
+    } else if ((mpVersion === '6.0') || (eeVersion === '10.0') || (mpVersion === "6.1") || (mpVersion === "7.0") || mpVersion === "7.1") {
         javaVersion = $(
             '.starter_field[data-starter-field=\'j\'] select'
         )
@@ -935,18 +948,21 @@ function validate_java_eeAndmp_levels() {
         .text();
  
         if (javaVersion === '8') {
-            
+            invalidCombination = true;
+            newJavaVersion = '11';
+        }
+    }
+    if (invalidCombination) {
          var javaOptions = $('.starter_field[data-starter-field=\'j\'] select option').filter(function(){
-            return this.text == "11"
+            return this.text == newJavaVersion
            });
          $(javaOptions).prop('selected', true);
          var message = $(
-         '<p> MicroProfile Version '+mpVersion+' and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
+         '<p> MicroProfile Version '+mpVersion+' and Java EE/Jakarta EE Version '+eeVersion+' require a minimum of Java SE Version '+newJavaVersion+'.</p>'
          );
          displayMessage(message,true);
          valid = true;
-        }
-     }
+    }
 }
 
 // validates the combinations of java/EE/MP on the starter page
@@ -1062,21 +1078,21 @@ function validate_starter_inputs(event) {
                 
             do {
                 var dependencies = versions[keys[i]];
-                // if we found the newMPVersion under this newEEVersion key we're done
-                 if (dependencies['m'].indexOf(newMPVersion) !== -1) {
+                // if we find the newMPVersion under this newEEVersion key, but it
+                // doesn't match we need to keep going because some MP versions are
+                // valid for more than one EE version
+                if (dependencies['m'].indexOf(newMPVersion) !== -1) {
                       // don't want to make the EE version None 
                       if (keys[i] !== "None") {
                         newEEVersion = keys[i];
                         if (newEEVersion === prev_selected_ee_version) {
-                         valid = true;
-                        } else {
-                          valid = false;
+                          found = true;
                         }
-                        found = true;
                     } 
                  }
                  i++;
             } while ((i < keys.length) && !found);
+            valid = found;
         } else {
             if (newMPVersion == "None"){
                   if (prev_selected_ee_version == "None") {
