@@ -139,7 +139,8 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
-    java_to_jakarta_feature_mapping = [("ejb","enterpriseBeans"),
+    java_to_jakarta_feature_mapping = [("beanValidation","validation"),
+        ("ejb","enterpriseBeans"),
         ("ejbHome", "enterpriseBeansHome"),
         ("ejbLite", "enterpriseBeansLite"),
         ("ejbPersistentTimer", "enterpriseBeansPersistentTimer"),
