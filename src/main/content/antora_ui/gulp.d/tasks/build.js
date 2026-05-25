@@ -7,6 +7,9 @@ const concat = require('gulp-concat')
 const cssnano = require('cssnano')
 const fs = require('fs-extra')
 const imagemin = require('gulp-imagemin')
+const mozjpeg = require('imagemin-mozjpeg')
+const optipng = require('imagemin-optipng')
+const svgo = require('imagemin-svgo')
 const { obj: map } = require('through2')
 const merge = require('merge-stream')
 const ospath = require('path')
@@ -75,12 +78,12 @@ module.exports = (src, dest, preview) => () => {
       .pipe(
         imagemin([
           // Do not have gif files
-          // Comment out to mitigate 
+          // Comment out to mitigate
           // https://github.com/OpenLiberty/openliberty.io/security/dependabot/37
-          // imagemin.gifsicle(), 
-          imagemin.jpegtran(),
-          imagemin.optipng(),
-          imagemin.svgo({ plugins: [{ removeViewBox: false }] }),
+          // imagemin.gifsicle(),
+          mozjpeg(),
+          optipng(),
+          svgo({ plugins: [{ removeViewBox: false }] }),
         ])
       ),
     vfs.src('helpers/*.js', opts),
