@@ -6,7 +6,7 @@ const buffer = require('vinyl-buffer')
 const concat = require('gulp-concat')
 const cssnano = require('cssnano')
 const fs = require('fs-extra')
-const imagemin = require('gulp-imagemin')
+const gulpImagemin = require('gulp-imagemin').default
 const mozjpeg = require('imagemin-mozjpeg')
 const optipng = require('imagemin-optipng')
 const svgo = require('imagemin-svgo')
@@ -76,14 +76,21 @@ module.exports = (src, dest, preview) => () => {
     vfs
       .src('img/**/*.{jpg,ico,png,svg}', opts)
       .pipe(
-        imagemin([
+        gulpImagemin([
           // Do not have gif files
           // Comment out to mitigate
           // https://github.com/OpenLiberty/openliberty.io/security/dependabot/37
           // imagemin.gifsicle(),
           mozjpeg(),
           optipng(),
-          svgo({ plugins: [{ removeViewBox: false }] }),
+          svgo({
+            plugins: [
+              {
+                name: 'removeViewBox',
+                active: false
+              }
+            ]
+          }),
         ])
       ),
     vfs.src('helpers/*.js', opts),
