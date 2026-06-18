@@ -28,8 +28,7 @@ echo `ruby -v`
 
 gem install ffi -v 1.16.3
 gem install public_suffix -v 5.1.1
-gem install sassc -v 2.4.0
-gem install jekyll -v 3.9.5
+gem install jekyll -v 3.8.6
 gem install jekyll-assets -v 2.4.0
 gem install jekyll-multiple-languages-plugin
 gem install bundler -v 2.4.22
