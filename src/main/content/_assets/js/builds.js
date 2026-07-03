@@ -1516,6 +1516,9 @@ $(document).ready(function () {
 
             // Set the click event for each tab link
             $tab.click(function (e) {
+                //prevent page scroll up more than desired
+                e.preventDefault();
+            
                 // Change url when tab is clicked so that page can be bookmarked
                 window.location.hash = this.hash;
 
