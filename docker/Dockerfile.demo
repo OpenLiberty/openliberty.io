@@ -66,7 +66,7 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:explode
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:26.0.0.7-kernel-slim-java8-ibmjava-ubi as runtime
+FROM icr.io/appcafe/open-liberty:26.0.0.8-kernel-slim-java8-ibmjava-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
 
