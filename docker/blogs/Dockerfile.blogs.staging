@@ -73,6 +73,7 @@ COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 # This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
 # using featureUtility.
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
+ENV JVM_ARGS="-Dhttp.agent=Java/1"
 RUN bash features.sh
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
