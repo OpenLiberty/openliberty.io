@@ -21,7 +21,6 @@ function optimizeImages(plugins) {
     }).catch(next)
   })
 }
-
 const merge = require('merge-stream')
 const ospath = require('path')
 const path = ospath.posix
