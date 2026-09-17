@@ -2,6 +2,15 @@
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
+# === TEMPORARY DEBUG  ===
+echo "=== NODE DEBUG START ==="
+echo "Node at start: $(node --version)"
+echo "Which node: $(which node)"
+echo "NVM versions installed:"
+ls /root/.nvm/versions/node/
+echo "PATH: $PATH"
+echo "=== NODE DEBUG END ==="
+# === END TEMPORARY DEBUG ===
 
 $BUILD_SCRIPTS_DIR/node_install.sh
 
