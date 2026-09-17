@@ -17,6 +17,7 @@ npm install -g @antora/site-generator@3.0.1
 npm install gulp -g --ignore-scripts
 npm install html-minifier -g
 npm install sass gulp-sass gulp-dart-sass --save-dev
+rm -f package-lock.json 
 npm install
 gulp sass:convert
 SOURCEMAPS=true gulp build
