@@ -1,4 +1,4 @@
-FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6 as jekyll
+FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.60 as jekyll
 SHELL ["/bin/bash", "-c"]
 
 COPY gems /gems
@@ -6,13 +6,9 @@ COPY robots.txt /
 COPY src /src
 COPY scripts /scripts
 
-# Upgrade the git manually to mitigate risk from CVE-2022-41903, CVE-2022-23521, CVE-2022-41953
 RUN apt-get update && \
     apt-get -y install curl git python3 python3-bs4 python3-lxml \
     libgdbm-dev libncurses5-dev automake libtool bison libffi-dev && \
-    add-apt-repository -y ppa:git-core/ppa && \
-    apt-get update && \
-    apt-get install git -y && \
     git --version
 
 ENV BUILD_SCRIPTS_DIR=/scripts/build \
@@ -67,7 +63,7 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:explode
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:26.0.0.8-kernel-slim-java8-ibmjava-ubi as runtime
+FROM icr.io/appcafe/open-liberty:26.0.0.9-kernel-slim-java8-ibmjava-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
 
