@@ -965,7 +965,7 @@ function validate_java_eeAndmp_levels() {
     }
 }
 
-// validates the combinations of java/EE/MP on the starter page
+// validates the combinations of java/EE/MP/Gradle on the starter page
 function validate_starter_inputs(event) {
     var valid = true;
     var disableGenProjButton = false;
@@ -981,8 +981,88 @@ function validate_starter_inputs(event) {
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
 
+    // Here user is setting the Gradle Version
+    if ((event) && (event.target.id === "Starter_Gradle_Version")) {
+        if ($('input[name=\'build_system\']:checked').val() === 'gradle' &&
+                starter_dependencies['gv'] && starter_dependencies['gv'].versions) {
+            var gradleVersions = starter_dependencies['gv'].versions;
+            var newGradleVersion = $('#Starter_Gradle_Version').find(':selected').text();
+            var javaOptions = $('.starter_field[data-starter-field=\'j\'] select option');
+            var prevJavaVersion = javaOptions.filter(':selected').text();
+            var allowedJavaVersions = gradleVersions[newGradleVersion]
+                ? gradleVersions[newGradleVersion]['j']
+                : null;
+
+            if (allowedJavaVersions && allowedJavaVersions.indexOf(prevJavaVersion) === -1) {
+                // Current Java is not compatible — pick the highest allowed Java version
+                var newJavaVersion = allowedJavaVersions[allowedJavaVersions.length - 1];
+                found = false;
+                i = 0;
+                while (i < javaOptions.length && !found) {
+                    if (javaOptions[i].value === newJavaVersion) {
+                        $(javaOptions[i]).prop('selected', true);
+                        found = true;
+                    } else {
+                        i++;
+                    }
+                }
+                var message = $(
+                    '<p>' +
+                    starter_info['j'].name +
+                    ' has been automatically updated from ' +
+                    prevJavaVersion +
+                    ' to ' +
+                    newJavaVersion +
+                    ' for compatibility with ' +
+                    starter_info['gv'].name +
+                    '.</p>'
+                );
+                displayMessage(message);
+            }
+        }
+    }
+    // Here user is setting the Java Version — check it is compatible with selected Gradle version
+    else if ((event) && (event.target.id === "Starter_Java_Version")) {
+        if ($('input[name=\'build_system\']:checked').val() === 'gradle' &&
+                starter_dependencies['gv'] && starter_dependencies['gv'].versions) {
+            var gradleVersions = starter_dependencies['gv'].versions;
+            var currentGradleVersion = $('#Starter_Gradle_Version').find(':selected').text();
+            var newJavaVersion = $('#Starter_Java_Version').find(':selected').text();
+            var allowedJavaVersions = gradleVersions[currentGradleVersion]
+                ? gradleVersions[currentGradleVersion]['j']
+                : null;
+
+            if (allowedJavaVersions && allowedJavaVersions.indexOf(newJavaVersion) === -1) {
+                // Selected Java is not compatible with current Gradle — downgrade Gradle to 8
+                var gradleOptions = $('.starter_field[data-starter-field=\'gv\'] select option');
+                var fallbackGradle = '8';
+                found = false;
+                i = 0;
+                while (i < gradleOptions.length && !found) {
+                    if (gradleOptions[i].value === fallbackGradle) {
+                        $(gradleOptions[i]).prop('selected', true);
+                        found = true;
+                    } else {
+                        i++;
+                    }
+                }
+                var message = $(
+                    '<p>' +
+                    starter_info['gv'].name +
+                    ' has been automatically updated from ' +
+                    currentGradleVersion +
+                    ' to ' +
+                    fallbackGradle +
+                    ' for compatibility with ' +
+                    starter_info['j'].name +
+                    '.</p>'
+                );
+                displayMessage(message);
+            }
+        }
+    }
     // Here user is setting the EE version
-    if((event) && (event.target.id === "Starter_Jakarta_Version")) {
+    else if((event) && (event.target.id === "Starter_Jakarta_Version")) {
         // mpOptions is all the possible mp versions in dropdown
         var mpOptions = $(
             '.starter_field[data-starter-field=\'m\'] select option'
@@ -1228,6 +1308,7 @@ $(document).ready(function () {
                             .append(option_label);
                     }
                     break;
+                case 'gv': // Gradle Version
                 case 'e': // Java EE / Jakarta EE Version
                 case 'j': // Java SE Version
                 case 'm': // MicroProfile Version
@@ -1268,6 +1349,17 @@ $(document).ready(function () {
             $('.starter_field input').on('keyup', function () {
                 validate_starter_inputs();
             });
+            // Show/hide Gradle Version dropdown based on the selected build tool.
+            function updateGradleVersionVisibility() {
+                var selected = $('input[name=\'build_system\']:checked').val();
+                if (selected === 'gradle') {
+                    $('#gradle_version_section').show();
+                } else {
+                    $('#gradle_version_section').hide();
+                }
+            }
+            $('input[name=\'build_system\']').on('change', updateGradleVersionVisibility);
+            updateGradleVersionVisibility(); // Set initial state.
             validate_starter_inputs(); // Run once to disable invalid inputs.
         })
         .fail(function () {
@@ -1288,11 +1380,13 @@ $(document).ready(function () {
         var java_version = $('#Starter_Java_Version').val();
         var jakarta_ee_version = $('#Starter_Jakarta_Version').val();
         var microprofile_version = $('#Starter_MicroProfile_Version').val();
+        var gradle_version = $('#Starter_Gradle_Version').val();
         var data = {
             a: app_name,
             b: build_type,
             e: jakarta_ee_version,
             g: base_package,
+            gv: gradle_version,
             j: java_version,
             m: microprofile_version,
         };
