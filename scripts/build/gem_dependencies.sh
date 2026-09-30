@@ -7,5 +7,6 @@ gem install jekyll-multiple-languages-plugin
 gem install bundler -v 2.4.22
 gem install faraday -v 2.8.1
 gem install faraday-net_http -v 3.0.2
-gem install jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
+gem install jekyll-feed jekyll-asciidoc coderay octokit
+gem install jekyll-include-cache -v 0.2.2
 gem uninstall -i /usr/local/rvm/gems/ruby-2.4.1@global rubygems-bundler
