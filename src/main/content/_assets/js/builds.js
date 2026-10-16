@@ -1380,16 +1380,17 @@ $(document).ready(function () {
         var java_version = $('#Starter_Java_Version').val();
         var jakarta_ee_version = $('#Starter_Jakarta_Version').val();
         var microprofile_version = $('#Starter_MicroProfile_Version').val();
-        var gradle_version = $('#Starter_Gradle_Version').val();
         var data = {
             a: app_name,
             b: build_type,
             e: jakarta_ee_version,
             g: base_package,
-            gv: gradle_version,
             j: java_version,
             m: microprofile_version,
         };
+        if (build_type === 'gradle') {
+            data.gv = $('#Starter_Gradle_Version').val();
+        }
         $.ajax({
             url: starter_submit_url,
             type: 'get',
