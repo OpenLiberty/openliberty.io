@@ -70,38 +70,40 @@ Omit `GH_PAT` (or leave it empty) for unauthenticated calls to public repos on `
 Determine the config file path using this priority order:
 
 1. **Explicit path in the user's prompt** — if the user's message contains a file path (relative
-   or absolute, e.g. `./sync.json`, `~/configs/prod.json`, `/etc/gh-sync.json`), use that path.
+   or absolute, e.g. `./gh-sync.js`, `~/configs/prod.js`), use that path.
    Resolve a relative path against the current workspace folder.
-2. **Workspace default** — check for `gh-sync.json` in the current workspace folder:
-   `<workspaceFolder>/gh-sync.json`.
+2. **Workspace default** — check for `gh-sync.js` in the current workspace folder:
+   `<workspaceFolder>/gh-sync.js`.
 3. **No config** — if neither is found, proceed without config (all fields collected interactively).
 
 ### 0b — Read and apply the config
 
 Read the resolved path:
 
+For JavaScript config files (`gh-sync.js` exporting `module.exports`):
 ```sh
-cat <resolved-config-path> 2>/dev/null
+node -e 'Object.assign(global, process.env); console.log(JSON.stringify(require(require("path").resolve("<resolved-config-path>"))))' 2>/dev/null
 ```
 
-If the file exists and is valid JSON, pre-fill every field it contains.
+If the file exists and yields a valid config object, pre-fill every field it contains.
+If PAT references/environment variables (e.g. `${GIT_PAT}`, `${GIT_IBM_PAT}`) are present, extract them securely and write them directly to `/tmp/gh-source-pat` / `/tmp/gh-target-pat`.
 If the file is missing or unreadable (including when the user supplied an explicit path), report:
 > ⚠️ Config file not found at `<path>` — continuing without it.
 
 ### Recognised config fields
 
-```json
-{
+```javascript
+module.exports = {
   "sourceHost":    "github.com",
   "sourceOwner":   "my-org",
   "sourceRepo":    "my-repo",
   "sourceBranch":  "main",
-  "sourcePat":     "ghp_...",
+  "sourcePat":     `${GIT_PAT}`,
   "targetHost":    "github.ibm.com",
   "targetOwner":   "my-other-org",
   "targetRepo":    "my-repo",
   "targetBranch":  "main",
-  "targetPat":     "ghp_...",
+  "targetPat":     `${GIT_IBM_PAT}`,
   "preserveMend":  true
 }
 ```
@@ -123,8 +125,8 @@ After loading successfully, tell the user which fields were pre-filled (names on
 If no config was found at either location, say nothing and proceed directly to Step 1.
 
 > **Tip (show once if no config found):** To skip interactive prompts in future, add a
-> `gh-sync.json` to your workspace root, or pass a path in your prompt — e.g.
-> _"sync a branch using ./my-sync-config.json"_.
+> `gh-sync.js` to your workspace root, or pass a path in your prompt — e.g.
+> _"sync a branch using ./gh-sync.js"_.
 
 ---
 
@@ -261,14 +263,14 @@ Once all inputs are in hand (hosts, owners, repos, branches, `preserveMend`), as
 **If the user chooses Yes:**
 
 1. Derive the filename from the repo names and hosts:
-   `<sourceOwner>-<sourceRepo>--<targetOwner>-<targetRepo>.gh-sync.json`
+   `<sourceOwner>-<sourceRepo>--<targetOwner>-<targetRepo>.gh-sync.js` (or `gh-sync.js`)
    Replace any character that is not alphanumeric, `-`, or `_` with `-`.
-   Example: `my-org-my-repo--other-org-my-repo.gh-sync.json`
+   Example: `my-org-my-repo--other-org-my-repo.gh-sync.js`
 
 2. Write the file to the current workspace folder using `write_file`:
 
-   ```json
-   {
+   ```javascript
+   module.exports = {
      "sourceHost":   "<sourceHost>",
      "sourceOwner":  "<sourceOwner>",
      "sourceRepo":   "<sourceRepo>",
@@ -281,12 +283,12 @@ Once all inputs are in hand (hosts, owners, repos, branches, `preserveMend`), as
    }
    ```
 
-   **Never include `sourcePat` or `targetPat` in the saved file.**
+   **Never include plaintext `sourcePat` or `targetPat` in the saved file.**
 
 3. Tell the user:
    > Config saved to `<filename>`. Pass it next time with:
    > _"sync using ./<filename>"_
-   > or place it as `gh-sync.json` in the workspace root to load it automatically.
+   > or place it as `gh-sync.js` in the workspace root to load it automatically.
 
 ---
 
