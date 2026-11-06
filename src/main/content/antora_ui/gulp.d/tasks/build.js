@@ -6,11 +6,37 @@ const buffer = require('vinyl-buffer')
 const concat = require('gulp-concat')
 const cssnano = require('cssnano')
 const fs = require('fs-extra')
-const imagemin = require('gulp-imagemin')
-const mozjpeg = require('imagemin-mozjpeg')
-const optipng = require('imagemin-optipng')
+const imagemin = require('imagemin')
 const svgo = require('imagemin-svgo')
+const sharp = require('sharp')
 const { obj: map } = require('through2')
+
+function optimizeImages(svgoPlugins) {
+  return map((file, enc, next) => {
+    if (!file.isBuffer()) return next(null, file)
+    const ext = require('path').extname(file.path).toLowerCase()
+    if (ext === '.jpg' || ext === '.jpeg') {
+      sharp(file.contents).jpeg({ mozjpeg: true }).toBuffer().then((buf) => {
+        file.contents = buf
+        next(null, file)
+      }).catch(next)
+    } else if (ext === '.png') {
+      sharp(file.contents).png({ compressionLevel: 9, effort: 10 }).toBuffer().then((buf) => {
+        file.contents = buf
+        next(null, file)
+      }).catch(next)
+    } else if (ext === '.svg') {
+      imagemin.buffer(file.contents, { plugins: svgoPlugins }).then((buf) => {
+        file.contents = buf
+        next(null, file)
+      }).catch(next)
+    } else {
+      next(null, file)
+    }
+  })
+}
+
+
 const merge = require('merge-stream')
 const ospath = require('path')
 const path = ospath.posix
@@ -76,14 +102,8 @@ module.exports = (src, dest, preview) => () => {
     vfs
       .src('img/**/*.{jpg,ico,png,svg}', opts)
       .pipe(
-        imagemin([
-          // Do not have gif files
-          // Comment out to mitigate
-          // https://github.com/OpenLiberty/openliberty.io/security/dependabot/37
-          // imagemin.gifsicle(),
-          mozjpeg(),
-          optipng(),
-          svgo({ plugins: [{ removeViewBox: false }] }),
+        optimizeImages([
+          svgo({ plugins: [{ name: 'preset-default', params: { overrides: { removeViewBox: false } } }] }),
         ])
       ),
     vfs.src('helpers/*.js', opts),
