@@ -63,22 +63,45 @@ RUN ./mvnw -X -e -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:e
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:26.0.0.11-kernel-slim-java25-openj9-ubi-minimal as runtime
-ENV SEC_TLS_TRUSTDEFAULTCERTS true
-ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
+FROM icr.io/appcafe/open-liberty:26.0.0.11-kernel-slim-java25-openj9-ubi-minimal as features-builder
+
+# Receive JFrog Artifactory credentials as build arguments for feature installation
+ARG ARTIFACTORY_USER
+ARG ARTIFACTORY_TOKEN
 
 COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 
+# Configure featureUtility to use JFrog Artifactory mirror instead of Maven Central
+# - featureUtility.properties holds the custom repository definition
+# - repositories.properties holds useDefaultRepository=false, which disables the Maven Central fallback
+RUN mkdir -p /opt/ol/wlp/etc && \
+    printf "customRepo.url=https://na.artifactory.swg-devops.com/artifactory/wasliberty-maven-remote\ncustomRepo.user=%s\ncustomRepo.password=%s\n" \
+    "${ARTIFACTORY_USER}" "${ARTIFACTORY_TOKEN}" > /opt/ol/wlp/etc/featureUtility.properties && \
+    printf "useDefaultRepository=false\n" > /opt/ol/wlp/etc/repositories.properties
+
 # This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
 # using featureUtility.
-# Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
 ARG VERBOSE=true
 ENV JVM_ARGS="-Dhttp.agent=Java/1"
 RUN bash features.sh || { cat /opt/ol/wlp/logs/* /opt/ibm/wlp/logs/* /config/logs/* 2>/dev/null; exit 1; }
 
+# Remove credentials and repository config from intermediate builder
+RUN rm -f /opt/ol/wlp/etc/featureUtility.properties /opt/ol/wlp/etc/repositories.properties
+
+#
+#
+#
+FROM icr.io/appcafe/open-liberty:26.0.0.11-kernel-slim-java25-openj9-ubi-minimal as runtime
+ENV SEC_TLS_TRUSTDEFAULTCERTS true
+ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
+
+# Copy installed Liberty features and server files from builder stage
+COPY --from=features-builder --chown=1001:0 /opt/ol/wlp /opt/ol/wlp
+COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
 # This script will add the requested server configurations, apply any interim fixes and populate caches to
 # optimize runtime
+ARG VERBOSE=true
 ENV OPENJ9_SCC=false
 RUN configure.sh
