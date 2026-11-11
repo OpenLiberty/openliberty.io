@@ -58,7 +58,7 @@ RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/waslib
 
 # Use Maven settings.xml to configure JFrog Artifactory mirror
 # Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
-RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
+RUN ./mvnw -X -e -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
 
 #
 #
