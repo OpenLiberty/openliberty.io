@@ -24,7 +24,10 @@ FROM jekyll as docs
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh && \
     $BUILD_SCRIPTS_DIR/docs_part_2.sh && \
-    $BUILD_SCRIPTS_DIR/gzip.sh
+    $BUILD_SCRIPTS_DIR/gzip.sh && \
+    mkdir /temp-docs && \
+    mv /target/jekyll-webapp/docs /temp-docs && \
+    ls /target/jekyll-webapp
 
 #
 #
@@ -56,10 +59,12 @@ RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/waslib
     echo "Maven distribution downloaded successfully" && \
     curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}"
 
-# Use Maven settings.xml to configure JFrog Artifactory mirror
-# Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
-# RUN ./mvnw -X -e -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
-RUN ./mvnw -e -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
+# Remove docs files so Maven does not process 100k+ Antora files during war:exploded
+RUN rm -rf /target/jekyll-webapp/docs && \
+    ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded && \
+    mkdir target/openliberty-website-1.0-SNAPSHOT/docs
+
+COPY --from=docs --chown=1001:0 /temp-docs/docs /target/openliberty-website-1.0-SNAPSHOT/docs
 
 #
 #
