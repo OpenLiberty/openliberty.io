@@ -85,7 +85,7 @@ RUN mkdir -p /opt/ol/wlp/etc && \
 # This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
 # using featureUtility.
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
-ARG VERBOSE=true
+# ARG VERBOSE=true
 ENV JVM_ARGS="-Dhttp.agent=Java/1"
 RUN sed -i 's/installServerFeatures/installServerFeatures --verbose/g' /opt/ol/helpers/build/features.sh
 RUN bash features.sh
