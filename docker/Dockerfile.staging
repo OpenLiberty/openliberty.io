@@ -78,17 +78,14 @@ COPY --from=docs --chown=1001:0 /temp-docs/docs /target/openliberty-website-1.0-
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:26.0.0.11-kernel-slim-java25-openj9-ubi-minimal as runtime
+FROM icr.io/appcafe/open-liberty:26.0.0.11-full-java25-openj9-ubi-minimal as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
 
 COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 
-# This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
-# using featureUtility.
-# Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
-ENV JVM_ARGS="-Dhttp.agent=Java/1"
-RUN bash features.sh
+# 'full' tag already includes all features for convenience, so features.sh is not needed
+# RUN bash features.sh
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
