@@ -24,10 +24,7 @@ FROM jekyll as docs
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh && \
     $BUILD_SCRIPTS_DIR/docs_part_2.sh && \
-    $BUILD_SCRIPTS_DIR/gzip.sh && \
-    mkdir /temp-docs && \
-    mv /target/jekyll-webapp/docs /temp-docs && \
-    ls /target/jekyll-webapp
+    $BUILD_SCRIPTS_DIR/gzip.sh
 
 #
 #
@@ -59,48 +56,26 @@ RUN MAVEN_DIST_URL="https://na.artifactory.swg-devops.com:443/artifactory/waslib
     echo "Maven distribution downloaded successfully" && \
     curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -L -o /.mvn/wrapper/maven-wrapper.jar "${MAVEN_WRAPPER_JAR}"
 
-# Remove docs files so Maven does not process 100k+ Antora files during war:exploded
-RUN rm -rf /target/jekyll-webapp/docs && \
-    ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded && \
-    mkdir target/openliberty-website-1.0-SNAPSHOT/docs
-
-COPY --from=docs --chown=1001:0 /temp-docs/docs /target/openliberty-website-1.0-SNAPSHOT/docs
+# Use Maven settings.xml to configure JFrog Artifactory mirror
+# Maven will use ARTIFACTORY_USER and ARTIFACTORY_TOKEN env vars from settings.xml
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 -s .mvn/settings.xml compile war:exploded
 
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:26.0.0.11-kernel-slim-java25-openj9-ubi-minimal as runtime
+FROM icr.io/appcafe/open-liberty:26.0.0.11-full-java25-openj9-ubi-minimal as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 ARG IBM_JAVA_OPTIONS=-Dhttps.protocols=TLSv1.2
 
-# Receive JFrog Artifactory credentials as build arguments for feature installation
-ARG ARTIFACTORY_USER
-ARG ARTIFACTORY_TOKEN
-
 COPY --chown=1001:0 src/main/wlp/server.xml /config/server.xml
 
-# Configure featureUtility to use JFrog Artifactory mirror instead of Maven Central
-# - featureUtility.properties holds the custom repository definition
-# - repositories.properties holds useDefaultRepository=false, which disables the Maven Central fallback
-RUN mkdir -p /opt/ol/wlp/etc && \
-    printf "customRepo.url=https://na.artifactory.swg-devops.com/artifactory/wasliberty-maven-remote\ncustomRepo.user=%s\ncustomRepo.password=%s\n" \
-    "${ARTIFACTORY_USER}" "${ARTIFACTORY_TOKEN}" > /opt/ol/wlp/etc/featureUtility.properties && \
-    printf "useDefaultRepository=false\n" > /opt/ol/wlp/etc/repositories.properties
-
-# This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose
-# using featureUtility.
-# Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
-# ARG VERBOSE=true
-ENV JVM_ARGS="-Dhttp.agent=Java/1"
-RUN sed -i 's/installServerFeatures/installServerFeatures --verbose/g' /opt/ol/helpers/build/features.sh
-RUN bash features.sh
-
-# Remove credentials and repository config from image
-RUN rm -f /opt/ol/wlp/etc/featureUtility.properties /opt/ol/wlp/etc/repositories.properties
+# 'full' tag already includes all features for convenience, so features.sh is not needed
+# RUN bash features.sh
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
 # This script will add the requested server configurations, apply any interim fixes and populate caches to
 # optimize runtime
+ARG VERBOSE=true
 ENV OPENJ9_SCC=false
 RUN configure.sh
