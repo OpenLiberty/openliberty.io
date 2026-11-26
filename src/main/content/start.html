@@ -79,6 +79,11 @@ seo-description: Use Maven or Gradle to create a starter application for develop
         </div>
         <div class="row">
             <div class="col">
+                <div id="gradle_version_section" class="starter_field" data-starter-field="gv" style="display:none;">
+                    <label class="starter_field_label" for="Starter_Gradle_Version">{% t start.gradle_version %}</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_Gradle_Version" aria-label="Gradle Version">
+                    </select>
+                </div>
                 <div id="java_version_section" class="starter_field" data-starter-field="j">
                     <label class="starter_field_label" for="Starter_Java_Version">{% t start.java_se_version %}</label>
                     <select class="starter_field_input starter_field_selector" id="Starter_Java_Version" aria-label="Java SE Version">
@@ -94,8 +99,8 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                     <select class="starter_field_input starter_field_selector" id="Starter_MicroProfile_Version" aria-label="MicroProfile Version">
                     </select>
                 </div>
-            </div>            
-        </div> 
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col">
@@ -145,7 +150,10 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                     <a id="getOL-maven" class="nav-link active" aria-controls="maven" href="#maven" role="tab" data-toggle="tab" tabindex="0" aria-selected="true" rel="noreferrer">Maven</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a id="getOL-gradle" class="nav-link" aria-controls="gradle" href="#gradle" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false" rel="noreferrer">Gradle</a>
+                    <a id="getOL-gradle9" class="nav-link" aria-controls="gradle9" href="#gradle9" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false" rel="noreferrer">Gradle 9</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a id="getOL-gradle8" class="nav-link" aria-controls="gradle8" href="#gradle8" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false" rel="noreferrer">Gradle 8</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a id="getOL-docker" class="nav-link" aria-controls="docker" href="#docker" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false" rel="noreferrer">Docker</a>
@@ -172,12 +180,32 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                         <a href="https://github.com/OpenLiberty/ci.maven/blob/main/README.md#plugins" rel="noreferrer" class="orange_link_light_background">{% t start.add_to_existing_app.maven_docs_link %}</a>
                     </p>
                 </div>
-                <!-- GRADLE -->
-                <div id="gradle" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle">
+                <!-- GRADLE 9 -->
+                <div id="gradle9" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle9">
                     <div class="code_block_wrapper" title="Code block">
                         <div class="copied_confirmation">Copied to clipboard</div>
                         <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
-                        <pre class="code_container">buildscript { <br>  repositories { <br>     mavenCentral()<br>  }<br>   dependencies {<br>    classpath 'io.openliberty.tools:liberty-gradle-plugin:'<span class="latest_version" id="gradle_version">3.9.5</span>'<br>   }<br>}</pre>
+                        <pre class="code_container">buildscript { <br>  repositories { <br>     mavenCentral()<br>  }<br>   dependencies {<br>    classpath 'io.openliberty.tools:liberty-gradle-plugin:<span class="latest_version" id="gradle_version">3.9.5</span>'<br>   }<br>}</pre>
+                    </div>
+                    <p>The plugin also needs to be applied in the build file in order to be utilized.</p>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">apply plugin: 'liberty'</pre>
+                    </div>
+                    <p>{% t start.add_to_existing_app.gradle_guide_text %}
+                        <a href="{{baseURL}}/guides/gradle-intro.html" class="blue_link_light_background_external">{% t start.add_to_existing_app.try_guide_link %}</a>
+                    </p>
+                    <p>{% t start.add_to_existing_app.gradle_docs_text %}
+                        <a href="https://github.com/OpenLiberty/ci.gradle/blob/main/README.md#plugin-configuration" rel="noreferrer" class="orange_link_light_background">{% t start.add_to_existing_app.gradle_docs_link %}</a>
+                    </p>
+                </div>
+                <!-- GRADLE 8 -->
+                <div id="gradle8" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle8">
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">buildscript { <br>  repositories { <br>     mavenCentral()<br>  }<br>   dependencies {<br>    classpath 'io.openliberty.tools:liberty-gradle-plugin:3.10.0'<br>   }<br>}</pre>
                     </div>
                     <p>The plugin also needs to be applied in the build file in order to be utilized.</p>
                     <div class="code_block_wrapper" title="Code block">
